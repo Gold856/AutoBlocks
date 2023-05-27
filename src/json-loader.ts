@@ -4,8 +4,12 @@ import { javaGenerator } from "./codegen";
 import { CommandData } from "./types/command-data";
 
 export const input = document.getElementById("fileInput")! as HTMLInputElement;
+const fileReader = new FileReader();
+/**
+ * Allows JSON files to be read and the workspace to be changed when a JSON file is read
+ * @param workspace The blockly workspace
+ */
 export function activateJsonLoader(workspace: WorkspaceSvg) {
-	const fileReader = new FileReader();
 	fileReader.addEventListener("loadend", e => {
 		const commandData: CommandData = JSON.parse(fileReader.result! as string);
 		loadBlocks(commandData);

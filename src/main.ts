@@ -1,6 +1,6 @@
 import * as Blockly from 'blockly';
-import { codeGen, createToolbox, generateCommandList, loadBlocks } from './block-loader';
-import { javaGenerator } from './codegen';
+import { createToolbox, generateCommandList, loadBlocks } from './block-loader';
+import { codeGen, javaGenerator } from './codegen';
 import { initHardcodedBlocks } from './hardcoded-blocks';
 import { activateJsonLoader, input } from './json-loader';
 import './style.css';

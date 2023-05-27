@@ -1,5 +1,11 @@
 import * as Blockly from 'blockly';
 
+/**
+ * Initializes blocks that are always in the workspace, such as command groups
+ * <p>
+ * 
+ * All hardcoded blocks should be added here.
+ */
 export function initHardcodedBlocks() {
 	Blockly.Blocks['ParallelCommandGroup'] = {
 		init: function () {
