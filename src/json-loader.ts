@@ -1,6 +1,6 @@
 import { WorkspaceSvg } from "blockly";
-import { codeGen, createToolbox, generateCommandList, loadBlocks } from "./block-loader";
-import { javaGenerator } from "./codegen";
+import { createToolbox, generateCommandList, loadBlocks } from "./block-loader";
+import { codeGen, javaGenerator } from "./codegen";
 import { CommandData } from "./types/command-data";
 
 export const input = document.getElementById("fileInput")! as HTMLInputElement;
