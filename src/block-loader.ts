@@ -1,15 +1,13 @@
 import * as Blockly from 'blockly';
 import { Block, Generator } from 'blockly';
 import { ToolboxInfo, ToolboxItemInfo } from 'blockly/core/utils/toolbox';
-import { CommandData } from "./types/command";
+import { CommandData } from "./types/command-data";
 import { Parameter } from "./types/parameter";
 
-export function loadBlocks(commandData: CommandData): Array<string> {
-	let blocks: Array<string> = [];
+export function loadBlocks(commandData: CommandData) {
 	let commands = commandData.commands;
 	for (let index = 0; index < commands.length; index++) {
 		let command = commands[index];
-		blocks.push(command.name);
 		let params = command.params;
 		Blockly.Blocks[command.name] = {
 			init: function () {
@@ -42,9 +40,17 @@ export function loadBlocks(commandData: CommandData): Array<string> {
 			}
 		}
 	}
-	return blocks;
 }
 
+export function generateCommandList(commandData: CommandData): Array<string> {
+	let commandList = [];
+	let commands = commandData.commands;
+	for (let index = 0; index < commands.length; index++) {
+		const command = commands[index];
+		commandList.push(command.name);
+	}
+	return commandList;
+}
 export function codeGen(commandData: CommandData, generator: Generator) {
 	let commands = commandData.commands;
 	// Iterate over each command
@@ -95,5 +101,6 @@ export function createToolbox(commands: Array<string>): ToolboxInfo {
 		let block: ToolboxItemInfo = { "kind": "block", "type": command };
 		toolbox.contents.push(block);
 	}
+	toolbox.contents.push({ "kind": "block", "type": "ParallelCommandGroup" });
 	return toolbox;
 }

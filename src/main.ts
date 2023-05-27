@@ -1,47 +1,21 @@
 import * as Blockly from 'blockly';
-import { codeGen, createToolbox, loadBlocks } from './block-loader';
-import { javaCodegen, javaGenerator } from './codegen';
+import { codeGen, createToolbox, generateCommandList, loadBlocks } from './block-loader';
+import { javaGenerator } from './codegen';
+import { initHardcodedBlocks } from './hardcoded-blocks';
+import { activateJsonLoader, input } from './json-loader';
 import './style.css';
-import commandData from "./template.json" assert { type: 'json' };
-import { CommandData } from './types/command';
-Blockly.Blocks['ParallelCommandGroup'] = {
-  init: function () {
-    this.appendDummyInput()
-      .appendField("ParallelCommandGroup");
-    this.appendStatementInput("commands")
-      .setCheck(null);
-    this.setPreviousStatement(true, null);
-    this.setNextStatement(true, null);
-    this.setColour(230);
-    this.setTooltip("");
-    this.setHelpUrl("");
-  }
-};
-const toolbox = createToolbox(loadBlocks(commandData as CommandData));
-toolbox.contents.push({ "kind": "block", "type": "ParallelCommandGroup" });
+import commandData from "./template.json" assert { type: "json" };
+import { CommandData } from './types/command-data';
+initHardcodedBlocks();
+loadBlocks(commandData as CommandData)
+const toolbox = createToolbox(generateCommandList(commandData as CommandData));
 const blocklyArea = document.getElementById('blocklyArea')!;
 const blocklyDiv = document.getElementById('blocklyDiv')!;
-setInterval(() => {
-  // console.log(javaGenerator.blockToCode(Blockly.Blocks["ParallelCommandGroup"  ]))
-  console.log(javaGenerator.workspaceToCode(workspace))
-}, 1000);
-const input = document.getElementById("fileInput")! as HTMLInputElement;
-const fileReader = new FileReader();
-fileReader.addEventListener("loadend", e => {
-  workspace.updateToolbox(createToolbox(loadBlocks(JSON.parse(fileReader.result! as string))));
-  codeGen(commandData as CommandData, javaGenerator);
-});
-input.addEventListener("change", e => {
-  const file = input.files?.item(0);
-  if (file) {
-    fileReader.readAsText(file);
-  }
-});
-
+// console.log(javaGenerator.workspaceToCode(workspace))
 const workspace = Blockly.inject(blocklyDiv,
   { toolbox: toolbox });
+activateJsonLoader(workspace);
 codeGen(commandData as CommandData, javaGenerator);
-javaGenerator.scrub_ = javaCodegen;
 const onresize = function (e: any) {
   // Compute the absolute coordinates and dimensions of blocklyArea.
   let element = blocklyArea;
