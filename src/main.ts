@@ -1,12 +1,31 @@
 import * as Blockly from 'blockly';
 import { codeGen, createToolbox, loadBlocks } from './block-loader';
+import { javaCodegen, javaGenerator } from './codegen';
 import './style.css';
 import commandData from "./template.json" assert { type: 'json' };
 import { CommandData } from './types/command';
+Blockly.Blocks['ParallelCommandGroup'] = {
+  init: function () {
+    this.appendDummyInput()
+      .appendField("ParallelCommandGroup");
+    this.appendStatementInput("commands")
+      .setCheck(null);
+    this.setPreviousStatement(true, null);
+    this.setNextStatement(true, null);
+    this.setColour(230);
+    this.setTooltip("");
+    this.setHelpUrl("");
+  }
+};
 const toolbox = createToolbox(loadBlocks(commandData as CommandData));
-const input = document.getElementById("fileInput")! as HTMLInputElement;
+toolbox.contents.push({ "kind": "block", "type": "ParallelCommandGroup" });
 const blocklyArea = document.getElementById('blocklyArea')!;
 const blocklyDiv = document.getElementById('blocklyDiv')!;
+setInterval(() => {
+  // console.log(javaGenerator.blockToCode(Blockly.Blocks["ParallelCommandGroup"  ]))
+  console.log(javaGenerator.workspaceToCode(workspace))
+}, 1000);
+const input = document.getElementById("fileInput")! as HTMLInputElement;
 const fileReader = new FileReader();
 fileReader.addEventListener("loadend", e => {
   workspace.updateToolbox(createToolbox(loadBlocks(JSON.parse(fileReader.result! as string))));
@@ -18,16 +37,11 @@ input.addEventListener("change", e => {
     fileReader.readAsText(file);
   }
 });
+
 const workspace = Blockly.inject(blocklyDiv,
   { toolbox: toolbox });
-let javaGenerator: Blockly.Generator = new Blockly.Generator("Java");
-codeGen(commandData as CommandData, workspace,);
-javaGenerator
-setInterval(() => {
-  // console.log(javaGenerator.workspaceToCode(workspace));
-  // console.log(javaGenerator.statementToCode(workspace.getAllBlocks(true)[0], ),);
-}, 1000);
-
+codeGen(commandData as CommandData, javaGenerator);
+javaGenerator.scrub_ = javaCodegen;
 const onresize = function (e: any) {
   // Compute the absolute coordinates and dimensions of blocklyArea.
   let element = blocklyArea;

@@ -1,5 +1,5 @@
 import * as Blockly from 'blockly';
-import { Workspace } from 'blockly';
+import { Block, Generator } from 'blockly';
 import { ToolboxInfo, ToolboxItemInfo } from 'blockly/core/utils/toolbox';
 import { CommandData } from "./types/command";
 import { Parameter } from "./types/parameter";
@@ -7,7 +7,6 @@ import { Parameter } from "./types/parameter";
 export function loadBlocks(commandData: CommandData): Array<string> {
 	let blocks: Array<string> = [];
 	let commands = commandData.commands;
-	const javaGenerator: Blockly.Generator = new Blockly.Generator("Java");
 	for (let index = 0; index < commands.length; index++) {
 		let command = commands[index];
 		blocks.push(command.name);
@@ -46,21 +45,25 @@ export function loadBlocks(commandData: CommandData): Array<string> {
 	return blocks;
 }
 
-export function codeGen(commandData: CommandData, generator: any) {
-	let blocks: Array<string> = [];
+export function codeGen(commandData: CommandData, generator: Generator) {
 	let commands = commandData.commands;
+	// Iterate over each command
 	for (let index = 0; index < commands.length; index++) {
 		let command = commands[index];
-		blocks.push(command.name);
 		let params = command.params;
-		generator[command.name] = (block: Blockly.Block) => {
+		// For each command, generate the Java code associated with it 
+		generator[command.name] = (block: Block) => {
 			let code: string = `new ${command.name}(`;
+			// For each parameter
 			for (let index = 0; index < params.length; index++) {
 				const parameter = params[index];
+				// Value from user 
 				let argument = block.getFieldValue(parameter.name);
+				// If the parameter is an enum, the name is the class the enum belongs to, so append it before the selected option
 				if (parameter.type == 'enum') {
 					let enumValue: string = parameter.name + `.${argument}`;
 					code += enumValue;
+					// Otherwise, just append the argument
 				} else {
 					code += argument;
 				}
@@ -70,10 +73,18 @@ export function codeGen(commandData: CommandData, generator: any) {
 					code += ","
 				}
 			}
-			return code + ");";
+			// Finish the command
+			return code;
 		}
 	}
 }
+/**
+ * A toolbox contains all the blocks that have been made available for use.
+ * This takes an array of strings containing the name of commands, and uses it
+ * to generate a toolbox with all the matching blocks.
+ * @param commands An array of command names 
+ * @returns The generated toolbox
+ */
 export function createToolbox(commands: Array<string>): ToolboxInfo {
 	let toolbox: { kind: string, contents: ToolboxItemInfo[] } = {
 		"kind": "flyoutToolbox",
