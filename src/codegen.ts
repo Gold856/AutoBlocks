@@ -1,7 +1,9 @@
 import { Block, Generator } from "blockly";
 import { CommandData } from "./types/command-data";
 export const javaGenerator: Generator = new Generator("Java");
+// @ts-ignore
 javaGenerator.scrub_ = javaCodegen;
+// @ts-ignore
 javaGenerator["ParallelCommandGroup"] = (block: Block): string => {
 	let code = "new ParallelCommandGroup("
 	const statement_members = javaGenerator.statementToCode(block, 'commands');
@@ -31,6 +33,7 @@ export function codeGen(commandData: CommandData, generator: Generator) {
 		let command = commands[index];
 		let params = command.params;
 		// For each command, generate the Java code associated with it 
+		// @ts-ignore
 		generator[command.name] = (block: Block) => {
 			let code: string = `new ${command.name}(`;
 			// For each parameter

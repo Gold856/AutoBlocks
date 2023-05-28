@@ -16,7 +16,7 @@ const workspace = Blockly.inject(blocklyDiv,
   { toolbox: toolbox });
 activateJsonLoader(workspace);
 codeGen(commandData as CommandData, javaGenerator);
-const onresize = function (e: any) {
+const onresize = () => {
   // Compute the absolute coordinates and dimensions of blocklyArea.
   let element = blocklyArea;
   let x = 0;
@@ -34,4 +34,4 @@ const onresize = function (e: any) {
   Blockly.svgResize(workspace);
 };
 window.addEventListener('resize', onresize, false);
-onresize(null);
+onresize();

@@ -10,13 +10,13 @@ const fileReader = new FileReader();
  * @param workspace The blockly workspace
  */
 export function activateJsonLoader(workspace: WorkspaceSvg) {
-	fileReader.addEventListener("loadend", e => {
+	fileReader.addEventListener("loadend", () => {
 		const commandData: CommandData = JSON.parse(fileReader.result! as string);
 		loadBlocks(commandData);
 		workspace.updateToolbox(createToolbox(generateCommandList(commandData)));
 		codeGen(commandData, javaGenerator);
 	});
-	input.addEventListener("change", e => {
+	input.addEventListener("change", () => {
 		const file = input.files?.item(0);
 		if (file) {
 			fileReader.readAsText(file);
