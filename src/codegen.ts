@@ -5,17 +5,17 @@ export const javaGenerator: Generator = new Generator("Java");
 javaGenerator.scrub_ = javaCodegen;
 // @ts-ignore
 javaGenerator["ParallelCommandGroup"] = (block: Block): string => {
-	let code = "new ParallelCommandGroup("
-	const statement_members = javaGenerator.statementToCode(block, 'commands');
-	return code + statement_members;
+	// Prefix the generated code with the constructor and add commands from attached blocks
+	return "new ParallelCommandGroup(" + javaGenerator.statementToCode(block, 'commands');
 };
 /** Handles connected blocks */
 function javaCodegen(this: Generator, block: Block, code: string, thisOnly?: boolean): string {
-	const nextBlock =
-		block.nextConnection && block.nextConnection.targetBlock();
-	// If there's a connected block, close off the previous command and add a comma to include the next command
-	if (nextBlock && !thisOnly) {
-		return code + '),\n' + this.blockToCode(nextBlock);
+	// If there's a connected block, and all attached blocks should have code generated, 
+	// then close off the previous command and add a comma to include the next command
+	// @ts-ignore
+	if (block.nextConnection.targetBlock() && !thisOnly) {
+		// @ts-ignore
+		return code + '),' + this.blockToCode(block.nextConnection.targetBlock());
 	}
 	// Otherwise, close the command
 	return code + ")";

@@ -1,4 +1,5 @@
 import * as Blockly from 'blockly';
+import { Block } from 'blockly';
 import { createToolbox, generateCommandList, loadBlocks } from './block-loader';
 import { codeGen, javaGenerator } from './codegen';
 import { initHardcodedBlocks } from './hardcoded-blocks';
@@ -16,6 +17,11 @@ const workspace = Blockly.inject(blocklyDiv,
   { toolbox: toolbox });
 activateJsonLoader(workspace);
 codeGen(commandData as CommandData, javaGenerator);
+workspace.addChangeListener((event: any) => {
+  if (event instanceof Blockly.Events.BlockBase && !(event instanceof Blockly.Events.BlockCreate)) {
+    console.log(javaGenerator.workspaceToCode(workspace))
+  }
+});
 const onresize = () => {
   // Compute the absolute coordinates and dimensions of blocklyArea.
   let element = blocklyArea;
