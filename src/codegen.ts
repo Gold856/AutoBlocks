@@ -1,32 +1,30 @@
-import { Block, Generator } from "blockly";
+import { Block, Generator, geras } from "blockly";
 import { CommandData } from "./types/command-data";
 export const javaGenerator: Generator = new Generator("Java");
+export const scriptGenerator: Generator = new Generator("Script");
+javaGenerator.INDENT = "	"
 // @ts-ignore
-javaGenerator.scrub_ = javaCodegen;
-// @ts-ignore
-javaGenerator["ParallelCommandGroup"] = (block: Block): string => {
-	// Prefix the generated code with the constructor and add commands from attached blocks
-	return "new ParallelCommandGroup(" + javaGenerator.statementToCode(block, 'commands');
-};
-/** Handles connected blocks */
-function javaCodegen(this: Generator, block: Block, code: string, thisOnly?: boolean): string {
+javaGenerator.scrub_ = (this: Generator, block: Block, code: string, thisOnly?: boolean): string => {
 	// If there's a connected block, and all attached blocks should have code generated, 
 	// then close off the previous command and add a comma to include the next command
 	// @ts-ignore
-	if (block.nextConnection.targetBlock() && !thisOnly) {
+	const nextBlock = block.nextConnection && block.nextConnection.targetBlock();
+	if (nextBlock && !thisOnly) {
 		// @ts-ignore
-		return code + '),' + this.blockToCode(block.nextConnection.targetBlock());
+		return code + '),\n' + this.blockToCode(nextBlock);
+		// Methods don't allow connections, and commands should've been caught before this. Methods are not to be modified
+	} else if (block.nextConnection == null) {
+		return code;
 	}
 	// Otherwise, close the command
-	return code + ")";
-}
-
+	return code + ")\n";
+};
 /**
  * Takes in command data from a JSON file, and calculates the code to emit based on the parameters.
  * @param commandData Command data from JSON
  * @param generator A code generator
  */
-export function codeGen(commandData: CommandData, generator: Generator) {
+export function javaCommandCodeGen(commandData: CommandData, generator: Generator) {
 	let commands = commandData.commands;
 	// Iterate over each command
 	for (let index = 0; index < commands.length; index++) {

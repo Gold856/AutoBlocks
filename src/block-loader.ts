@@ -72,16 +72,25 @@ export function generateCommandList(commandData: CommandData): Array<string> {
 export function createToolbox(commands: Array<string>): ToolboxInfo {
 	// Toolboxes start with this structure
 	let toolbox: { kind: string, contents: ToolboxItemInfo[] } = {
-		"kind": "flyoutToolbox",
+		"kind": "categoryToolbox",
 		"contents": []
+	}
+	let commandCategory: { kind: string, name: string, contents: ToolboxItemInfo[] } = {
+		"kind": "category", "name": "Commands", "contents": [
+			{ "kind": "block", "type": "Method" }]
 	}
 	// Then we push more blocks to the contents array
 	for (let index = 0; index < commands.length; index++) {
 		const command = commands[index];
 		let block: ToolboxItemInfo = { "kind": "block", "type": command };
-		toolbox.contents.push(block);
+		commandCategory.contents.push(block);
 	}
-	// Hardcoded blocks need to go here as well
-	toolbox.contents.push({ "kind": "block", "type": "ParallelCommandGroup" });
+	let commandGroupCategory = {
+		"kind": "category", "name": "Command Groups", "contents": [{ "kind": "block", "type": "ParallelCommandGroup" },
+		{ "kind": "block", "type": "ParallelDeadlineGroup" },
+		{ "kind": "block", "type": "ParallelRaceGroup" },
+		{ "kind": "block", "type": "SequentialCommandGroup" }]
+	}
+	toolbox.contents.push(commandGroupCategory, commandCategory);
 	return toolbox;
 }

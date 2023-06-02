@@ -1,6 +1,6 @@
 import { WorkspaceSvg } from "blockly";
 import { createToolbox, generateCommandList, loadBlocks } from "./block-loader";
-import { codeGen, javaGenerator } from "./codegen";
+import { javaCommandCodeGen, javaGenerator } from "./codegen";
 import { CommandData } from "./types/command-data";
 
 export const input = document.getElementById("fileInput")! as HTMLInputElement;
@@ -14,7 +14,7 @@ export function activateJsonLoader(workspace: WorkspaceSvg) {
 		const commandData: CommandData = JSON.parse(fileReader.result! as string);
 		loadBlocks(commandData);
 		workspace.updateToolbox(createToolbox(generateCommandList(commandData)));
-		codeGen(commandData, javaGenerator);
+		javaCommandCodeGen(commandData, javaGenerator);
 	});
 	input.addEventListener("change", () => {
 		const file = input.files?.item(0);
