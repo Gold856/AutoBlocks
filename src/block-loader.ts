@@ -17,8 +17,11 @@ export function loadBlocks(commandData: CommandData) {
 			init: function () {
 				// Creates a label for this block, which is the name specified in JSON
 				let block = this.appendDummyInput().appendField(command.name);
-				for (let index = 0; index < params.length; index++) {
-					const parameter: Parameter = params[index];
+				for (let paramObject of Object.values(params)) {
+					const conformedParamObject = paramObject.map((i)=>{
+						i.options = i.options != undefined ? Object.values(i.options) : undefined;
+					})
+					const parameter: Parameter = conformedParamObject;
 					switch (parameter.type) {
 						case "enum":
 							let options: any = [];
