@@ -1,20 +1,20 @@
 import * as Blockly from 'blockly';
-import { Block } from 'blockly';
-import { createToolbox, generateCommandList, loadBlocks } from './block-loader';
+import { createToolbox, generateCommandList, load, loadBlocks } from './block-loader';
 import { javaCommandCodeGen, javaGenerator } from './codegen';
 import { initHardcodedBlocks } from './hardcoded-blocks';
 import { activateJsonLoader, input } from './json-loader';
 import './style.css';
 import commandData from "./template.json" assert { type: "json" };
+import test from "./testcommandlist.json" assert {type: "json"};
 import { CommandData } from './types/command-data';
 initHardcodedBlocks();
-loadBlocks(commandData as CommandData)
+load(test)
 const toolbox = createToolbox(generateCommandList(commandData as CommandData));
 const blocklyArea = document.getElementById('blocklyArea')!;
 const blocklyDiv = document.getElementById('blocklyDiv')!;
 // console.log(javaGenerator.workspaceToCode(workspace))
 const workspace = Blockly.inject(blocklyDiv,
-  { toolbox: toolbox });
+  { toolbox: toolbox, });
 activateJsonLoader(workspace);
 javaCommandCodeGen(commandData as CommandData, javaGenerator);
 workspace.addChangeListener((event: any) => {

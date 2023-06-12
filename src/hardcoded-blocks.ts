@@ -10,7 +10,7 @@ import { javaGenerator } from './codegen';
 export function initHardcodedBlocks() {
 	Blockly.Blocks['ParallelCommandGroup'] = {
 		init: function () {
-			this.appendDummyInput()
+			this.appendDummyInput("CommandName")
 				.appendField("ParallelCommandGroup");
 			this.appendStatementInput("commands")
 				.setCheck(null);
@@ -65,7 +65,7 @@ export function initHardcodedBlocks() {
 			this.appendDummyInput()
 				.appendField(new Blockly.FieldTextInput("MethodName"), "MethodName");
 			this.appendStatementInput("commands")
-				.setCheck(null);
+				.setCheck("Next");
 			this.setColour(230);
 			this.setTooltip("");
 			this.setHelpUrl("");

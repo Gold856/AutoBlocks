@@ -1,17 +1,16 @@
 import * as Blockly from 'blockly';
 import { ToolboxInfo, ToolboxItemInfo } from 'blockly/core/utils/toolbox';
+import test from "./testcommandlist.json";
 import { CommandData } from "./types/command-data";
+import { Root } from './types/new-format/root';
 import { Parameter } from "./types/parameter";
-
 /**
  * Takes command data from a JSON file and generates the corresponding blocks
  * @param commandData Command data from JSON
  */
 export function loadBlocks(commandData: CommandData) {
-	/** The array of commands */
-	let commands = commandData.commands;
-	for (let index = 0; index < commands.length; index++) {
-		let command = commands[index];
+	/** Loop over the array of commands */
+	for (const command of commandData.commands) {
 		let params = command.params;
 		Blockly.Blocks[command.name] = {
 			init: function () {
@@ -32,7 +31,7 @@ export function loadBlocks(commandData: CommandData) {
 							block.appendField(new Blockly.FieldNumber(0), parameter.name);
 							break;
 						case "raw":
-							block.appendField("");
+							block.appendField(new Blockly.FieldTextInput(), parameter.name);
 							break;
 						default:
 							block.appendField("");
@@ -46,7 +45,41 @@ export function loadBlocks(commandData: CommandData) {
 		}
 	}
 }
-
+export function load(commandData: Root) {
+	// Loop over all commands
+	for (const [commandName, command] of Object.entries(commandData.commands)) {
+		Blockly.Blocks[commandName] = {
+			init: function () {
+				// Creates a label for this block, which is the name specified in JSON
+				let block = this.appendDummyInput().appendField(commandName);
+				// if (Object.is(command.parameters, {})) { return; }
+				for (const [parameterName, parameter] of Object.entries(command.parameters)) {
+					switch (parameter.type) {
+						case "select":
+							let options: any = [];
+							for (const [key, option] of Object.entries(parameter.options!)) {
+								options.push([option, option.toLocaleUpperCase()]);
+							}
+							block.appendField(new Blockly.FieldDropdown(options), parameter.name)
+							break;
+						case "number":
+							block.appendField(new Blockly.FieldNumber(0), parameter.name);
+							break;
+						case "javaObject":
+							block.appendField(new Blockly.FieldTextInput(), parameter.name);
+							break;
+						default:
+							block.appendField("");
+							break;
+					}
+				}
+				this.setPreviousStatement(true, null);
+				this.setNextStatement(true, null);
+				this.setColour(230);
+			}
+		}
+	}
+}
 /**
  * Creates a list of commands from a JSON file
  * @param commandData Command data from JSON
@@ -62,6 +95,14 @@ export function generateCommandList(commandData: CommandData): Array<string> {
 	return commandList;
 }
 
+export function gen(commandData) {
+	let commandList = [];
+	let commands = commandData.commands;
+	for (const [commandName, command] of Object.entries(commandData.commands)) {
+		commandList.push(commandName);
+	}
+	return commandList;
+}
 /**
  * A toolbox contains all the blocks that have been made available for use.
  * This takes an array of strings containing the name of commands, and uses it

@@ -1,5 +1,5 @@
 import { WorkspaceSvg } from "blockly";
-import { createToolbox, generateCommandList, loadBlocks } from "./block-loader";
+import { createToolbox, gen, generateCommandList, load, loadBlocks } from "./block-loader";
 import { javaCommandCodeGen, javaGenerator } from "./codegen";
 import { CommandData } from "./types/command-data";
 
@@ -12,8 +12,8 @@ const fileReader = new FileReader();
 export function activateJsonLoader(workspace: WorkspaceSvg) {
 	fileReader.addEventListener("loadend", () => {
 		const commandData: CommandData = JSON.parse(fileReader.result! as string);
-		loadBlocks(commandData);
-		workspace.updateToolbox(createToolbox(generateCommandList(commandData)));
+		load(commandData);
+		workspace.updateToolbox(createToolbox(gen(commandData)));
 		javaCommandCodeGen(commandData, javaGenerator);
 	});
 	input.addEventListener("change", () => {
