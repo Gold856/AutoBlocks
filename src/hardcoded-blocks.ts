@@ -65,12 +65,13 @@ export function initHardcodedBlocks() {
 			this.appendDummyInput()
 				.appendField(new Blockly.FieldTextInput("MethodName"), "MethodName");
 			this.appendStatementInput("commands")
-				.setCheck("Next");
+				.setCheck(null);
 			this.setColour(230);
 			this.setTooltip("");
 			this.setHelpUrl("");
-		}
-	};
+		},
+	}
+
 
 	// @ts-ignore
 	javaGenerator["ParallelCommandGroup"] = (block: Block): string => {

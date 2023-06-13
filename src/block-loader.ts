@@ -1,6 +1,5 @@
 import * as Blockly from 'blockly';
 import { ToolboxInfo, ToolboxItemInfo } from 'blockly/core/utils/toolbox';
-import test from "./testcommandlist.json";
 import { CommandData } from "./types/command-data";
 import { Root } from './types/new-format/root';
 import { Parameter } from "./types/parameter";
@@ -95,10 +94,9 @@ export function generateCommandList(commandData: CommandData): Array<string> {
 	return commandList;
 }
 
-export function gen(commandData) {
+export function gen(commandData: Root) {
 	let commandList = [];
-	let commands = commandData.commands;
-	for (const [commandName, command] of Object.entries(commandData.commands)) {
+	for (const commandName in Object.keys(commandData.commands)) {
 		commandList.push(commandName);
 	}
 	return commandList;
