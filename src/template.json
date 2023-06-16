@@ -6,11 +6,7 @@
 				{
 					"type": "enum",
 					"name": "ExamplePosition",
-					"options": [
-						"HIGH",
-						"MEDIUM",
-						"LOW"
-					]
+					"options": ["HIGH", "MEDIUM", "LOW"]
 				},
 				{
 					"type": "number",
@@ -24,11 +20,7 @@
 				{
 					"type": "enum",
 					"name": "Position",
-					"options": [
-						"LOL",
-						"MEH",
-						"LOW"
-					]
+					"options": ["LOL", "MEH", "LOW"]
 				},
 				{
 					"type": "number",

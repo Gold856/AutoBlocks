@@ -1,7 +1,7 @@
-import * as Blockly from 'blockly';
-import { ToolboxInfo, ToolboxItemInfo } from 'blockly/core/utils/toolbox';
+import * as Blockly from "blockly";
+import { ToolboxInfo, ToolboxItemInfo } from "blockly/core/utils/toolbox";
 import { CommandData } from "./types/command-data";
-import { Root } from './types/new-format/root';
+import { Root } from "./types/new-format/root";
 import { Parameter } from "./types/parameter";
 /**
  * Takes command data from a JSON file and generates the corresponding blocks
@@ -24,7 +24,10 @@ export function loadBlocks(commandData: CommandData) {
 								const option = parameter.options![index];
 								options.push([option, option.toLocaleUpperCase()]);
 							}
-							block.appendField(new Blockly.FieldDropdown(options), parameter.name)
+							block.appendField(
+								new Blockly.FieldDropdown(options),
+								parameter.name
+							);
 							break;
 						case "number":
 							block.appendField(new Blockly.FieldNumber(0), parameter.name);
@@ -41,7 +44,7 @@ export function loadBlocks(commandData: CommandData) {
 				this.setNextStatement(true, null);
 				this.setColour(230);
 			}
-		}
+		};
 	}
 }
 export function load(commandData: Root) {
@@ -52,14 +55,19 @@ export function load(commandData: Root) {
 				// Creates a label for this block, which is the name specified in JSON
 				let block = this.appendDummyInput().appendField(commandName);
 				// if (Object.is(command.parameters, {})) { return; }
-				for (const [parameterName, parameter] of Object.entries(command.parameters)) {
+				for (const [parameterName, parameter] of Object.entries(
+					command.parameters
+				)) {
 					switch (parameter.type) {
 						case "select":
 							let options: any = [];
 							for (const [key, option] of Object.entries(parameter.options!)) {
 								options.push([option, option.toLocaleUpperCase()]);
 							}
-							block.appendField(new Blockly.FieldDropdown(options), parameter.name)
+							block.appendField(
+								new Blockly.FieldDropdown(options),
+								parameter.name
+							);
 							break;
 						case "number":
 							block.appendField(new Blockly.FieldNumber(0), parameter.name);
@@ -76,7 +84,7 @@ export function load(commandData: Root) {
 				this.setNextStatement(true, null);
 				this.setColour(230);
 			}
-		}
+		};
 	}
 }
 /**
@@ -105,31 +113,40 @@ export function gen(commandData: Root) {
  * A toolbox contains all the blocks that have been made available for use.
  * This takes an array of strings containing the name of commands, and uses it
  * to generate a toolbox with all the matching blocks.
- * @param commands An array of command names 
+ * @param commands An array of command names
  * @returns The generated toolbox
  */
 export function createToolbox(commands: Array<string>): ToolboxInfo {
 	// Toolboxes start with this structure
-	let toolbox: { kind: string, contents: ToolboxItemInfo[] } = {
-		"kind": "categoryToolbox",
-		"contents": []
-	}
-	let commandCategory: { kind: string, name: string, contents: ToolboxItemInfo[] } = {
-		"kind": "category", "name": "Commands", "contents": [
-			{ "kind": "block", "type": "Method" }]
-	}
+	let toolbox: { kind: string; contents: ToolboxItemInfo[] } = {
+		kind: "categoryToolbox",
+		contents: []
+	};
+	let commandCategory: {
+		kind: string;
+		name: string;
+		contents: ToolboxItemInfo[];
+	} = {
+		kind: "category",
+		name: "Commands",
+		contents: [{ kind: "block", type: "Method" }]
+	};
 	// Then we push more blocks to the contents array
 	for (let index = 0; index < commands.length; index++) {
 		const command = commands[index];
-		let block: ToolboxItemInfo = { "kind": "block", "type": command };
+		let block: ToolboxItemInfo = { kind: "block", type: command };
 		commandCategory.contents.push(block);
 	}
 	let commandGroupCategory = {
-		"kind": "category", "name": "Command Groups", "contents": [{ "kind": "block", "type": "ParallelCommandGroup" },
-		{ "kind": "block", "type": "ParallelDeadlineGroup" },
-		{ "kind": "block", "type": "ParallelRaceGroup" },
-		{ "kind": "block", "type": "SequentialCommandGroup" }]
-	}
+		kind: "category",
+		name: "Command Groups",
+		contents: [
+			{ kind: "block", type: "ParallelCommandGroup" },
+			{ kind: "block", type: "ParallelDeadlineGroup" },
+			{ kind: "block", type: "ParallelRaceGroup" },
+			{ kind: "block", type: "SequentialCommandGroup" }
+		]
+	};
 	toolbox.contents.push(commandGroupCategory, commandCategory);
 	return toolbox;
 }

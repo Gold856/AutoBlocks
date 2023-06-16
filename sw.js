@@ -1,8 +1,7 @@
 // Increment when you update the repo
 const cacheName = "AutoBlocks";
 // URLs for all the assets
-const resourceFiles = [
-]
+const resourceFiles = [];
 self.addEventListener("install", (e) => {
 	console.log("[Service Worker] Install");
 	e.waitUntil(
@@ -10,8 +9,9 @@ self.addEventListener("install", (e) => {
 			// Retrieve our cache object
 			const cache = await caches.open(cacheName);
 			console.log("[ServiceWorker] Caching assets");
-		})())
-})
+		})()
+	);
+});
 self.addEventListener("fetch", (e) => {
 	e.respondWith(
 		(async () => {
@@ -22,7 +22,7 @@ self.addEventListener("fetch", (e) => {
 			if (r) {
 				return r;
 			}
-			console.log(e.requests)
+			console.log(e.requests);
 			// Otherwise, download the resource
 			const response = await fetch(e.request);
 			// Retrieve our cache object
@@ -47,6 +47,8 @@ self.addEventListener("activate", (e) => {
 					}
 					// Otherwise, delete it, as it is no longer needed
 					return caches.delete(key);
-				}));
-		}));
+				})
+			);
+		})
+	);
 });

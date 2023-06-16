@@ -1,29 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<link rel="manifest" href="/manifest.json" />
+		<link rel="icon" type="image/png" href="/favicon.png" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<script>
+			// if ("serviceWorker" in navigator) {
+			//   navigator.serviceWorker.register("./sw.js");
+			// }
+		</script>
+		<title>AutoBlocks</title>
+	</head>
 
-<head>
-  <meta charset="UTF-8" />
-  <link rel="manifest" href="/manifest.json">
-  <link rel="icon" type="image/png" href="/favicon.png" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script>
-    // if ("serviceWorker" in navigator) {
-    //   navigator.serviceWorker.register("./sw.js");
-    // }
-  </script>
-  <title>AutoBlocks</title>
-</head>
-
-<body>
-  <div id="blocklyArea">
-    <span>Load Commands:</span>
-    <input id="fileInput" type="file" accept="application/json">
-    <button id="save">Save</button>
-    <span>Load Workspace:</span>
-    <input id="load" type="file" accept="application/json">
-    <div id="blocklyDiv"></div>
-  </div>
-  <script type="module" src="/src/main.ts"></script>
-</body>
-
+	<body>
+		<div id="blocklyArea">
+			<span>Load Commands:</span>
+			<input id="fileInput" type="file" accept="application/json" />
+			<button id="save">Save</button>
+			<span>Load Workspace:</span>
+			<input id="load" type="file" accept="application/json" />
+			<div id="blocklyDiv"></div>
+		</div>
+		<script type="module" src="/src/main.ts"></script>
+	</body>
 </html>

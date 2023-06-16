@@ -1,0 +1,5 @@
+dist
+.vscode
+package*.json
+tsconfig.json
+*.md

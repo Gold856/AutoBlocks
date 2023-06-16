@@ -4,4 +4,4 @@ export default {
 			external: ["src/sw.js"]
 		}
 	}
-}
+};

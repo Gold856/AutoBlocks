@@ -3,8 +3,10 @@ import { createToolbox, gen, load } from "./block-loader";
 import { javaCommandCodeGen, javaGenerator } from "./codegen";
 import { CommandData } from "./types/command-data";
 export const input = document.getElementById("fileInput")! as HTMLInputElement;
-const saveButton = document.getElementById('save')! as HTMLButtonElement;
-const workspaceLoadButton = document.getElementById('load')! as HTMLInputElement;
+const saveButton = document.getElementById("save")! as HTMLButtonElement;
+const workspaceLoadButton = document.getElementById(
+	"load"
+)! as HTMLInputElement;
 const commandFileReader = new FileReader();
 const workspaceFileReader = new FileReader();
 /**
@@ -13,7 +15,9 @@ const workspaceFileReader = new FileReader();
  */
 export function activateJsonLoader(workspace: WorkspaceSvg) {
 	commandFileReader.addEventListener("loadend", () => {
-		const commandData: CommandData = JSON.parse(commandFileReader.result! as string);
+		const commandData: CommandData = JSON.parse(
+			commandFileReader.result! as string
+		);
 		load(commandData);
 		workspace.updateToolbox(createToolbox(gen(commandData)));
 		javaCommandCodeGen(commandData, javaGenerator);
@@ -25,10 +29,13 @@ export function activateJsonLoader(workspace: WorkspaceSvg) {
 		}
 	});
 	saveButton.addEventListener("click", () => {
-		let file = new Blob([JSON.stringify(serialization.workspaces.save(workspace))], { type: 'application/json' });
+		let file = new Blob(
+			[JSON.stringify(serialization.workspaces.save(workspace))],
+			{ type: "application/json" }
+		);
 		let link = document.createElement("a");
 		link.id = "destroy";
-		link.download = "workspace.json"
+		link.download = "workspace.json";
 		link.href = URL.createObjectURL(file);
 		link.click();
 	});
@@ -39,6 +46,9 @@ export function activateJsonLoader(workspace: WorkspaceSvg) {
 		}
 	});
 	workspaceFileReader.addEventListener("loadend", () =>
-		serialization.workspaces.load(JSON.parse(workspaceFileReader.result! as string), workspace)
+		serialization.workspaces.load(
+			JSON.parse(workspaceFileReader.result! as string),
+			workspace
+		)
 	);
 }

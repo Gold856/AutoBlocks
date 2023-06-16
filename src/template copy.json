@@ -1,63 +1,50 @@
 {
-  "commands": [
-    {
-      "name": "ExampleCommand",
-      "params": [
-        {
-          "type": "enum",
-          "name": "ExamplePosition",
-          "options": [
-            "STATiON",
-            "MEDIUM",
-            "LOW"
-          ]
-        },
-        {
-          "type": "number",
-          "name": "angle"
-        }
-      ]
-    },
-    {
-      "name": "ETCommand",
-      "params": [
-        {
-          "type": "enum",
-          "name": "Position",
-          "options": [
-            "ME",
-            "MEH",
-            "LOW"
-          ]
-        },
-        {
-          "type": "number",
-          "name": "angle"
-        }
-      ]
-    },
-    {
-      "name": "SuperCommand",
-      "params": [
-        {
-          "type": "enum",
-          "name": "position",
-          "options": [
-            "SUPER",
-            "HIGH",
-            "MEDIUM",
-            "LOW"
-          ]
-        },
-        {
-          "type": "number",
-          "name": "power"
-        },
-        {
-          "type": "raw",
-          "name": "field"
-        }
-      ]
-    }
-  ]
+	"commands": [
+		{
+			"name": "ExampleCommand",
+			"params": [
+				{
+					"type": "enum",
+					"name": "ExamplePosition",
+					"options": ["STATiON", "MEDIUM", "LOW"]
+				},
+				{
+					"type": "number",
+					"name": "angle"
+				}
+			]
+		},
+		{
+			"name": "ETCommand",
+			"params": [
+				{
+					"type": "enum",
+					"name": "Position",
+					"options": ["ME", "MEH", "LOW"]
+				},
+				{
+					"type": "number",
+					"name": "angle"
+				}
+			]
+		},
+		{
+			"name": "SuperCommand",
+			"params": [
+				{
+					"type": "enum",
+					"name": "position",
+					"options": ["SUPER", "HIGH", "MEDIUM", "LOW"]
+				},
+				{
+					"type": "number",
+					"name": "power"
+				},
+				{
+					"type": "raw",
+					"name": "field"
+				}
+			]
+		}
+	]
 }
