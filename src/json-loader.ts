@@ -1,8 +1,15 @@
 import { serialization, WorkspaceSvg } from "blockly";
-import { createToolbox, gen, load } from "./block-loader";
+import {
+	createToolbox,
+	gen,
+	generateCommandList,
+	load,
+	loadBlocks
+} from "./block-loader";
 import { javaCommandCodeGen, javaGenerator } from "./codegen";
 import { CommandData } from "./types/command-data";
-export const input = document.getElementById("fileInput")! as HTMLInputElement;
+import { Root } from "./types/new-format/root";
+const jsonInput = document.getElementById("fileInput")! as HTMLInputElement;
 const saveButton = document.getElementById("save")! as HTMLButtonElement;
 const workspaceLoadButton = document.getElementById(
 	"load"
@@ -14,20 +21,31 @@ const workspaceFileReader = new FileReader();
  * @param workspace The blockly workspace
  */
 export function activateJsonLoader(workspace: WorkspaceSvg) {
-	commandFileReader.addEventListener("loadend", () => {
-		const commandData: CommandData = JSON.parse(
-			commandFileReader.result! as string
-		);
-		load(commandData);
-		workspace.updateToolbox(createToolbox(gen(commandData)));
-		javaCommandCodeGen(commandData, javaGenerator);
-	});
-	input.addEventListener("change", () => {
-		const file = input.files?.item(0);
+	// When a file of commands is selected, use the file reader to read it
+	jsonInput.addEventListener("change", () => {
+		const file = jsonInput.files?.item(0);
 		if (file) {
 			commandFileReader.readAsText(file);
 		}
 	});
+	// When the file reader is done reading the file, update Blockly with the new commands
+	commandFileReader.addEventListener("loadend", () => {
+		const commandData: CommandData | Root = JSON.parse(
+			commandFileReader.result! as string
+		);
+		if (commandData.commands instanceof Array) {
+			loadBlocks(commandData as CommandData);
+			workspace.updateToolbox(
+				createToolbox(generateCommandList(commandData as CommandData))
+			);
+			javaCommandCodeGen(commandData as CommandData, javaGenerator);
+		} else {
+			load(commandData as Root);
+			workspace.updateToolbox(createToolbox(gen(commandData as Root)));
+			javaCommandCodeGen(commandData, javaGenerator);
+		}
+	});
+	// Magic code to save workspace as JSON
 	saveButton.addEventListener("click", () => {
 		let file = new Blob(
 			[JSON.stringify(serialization.workspaces.save(workspace))],
@@ -39,12 +57,14 @@ export function activateJsonLoader(workspace: WorkspaceSvg) {
 		link.href = URL.createObjectURL(file);
 		link.click();
 	});
+	// When a workspace save is selected, use the file reader to read it
 	workspaceLoadButton.addEventListener("change", () => {
 		const file = workspaceLoadButton.files?.item(0);
 		if (file) {
 			workspaceFileReader.readAsText(file);
 		}
 	});
+	// When the file reader is done reading the file, load the workspace
 	workspaceFileReader.addEventListener("loadend", () =>
 		serialization.workspaces.load(
 			JSON.parse(workspaceFileReader.result! as string),

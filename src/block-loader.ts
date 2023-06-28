@@ -3,8 +3,38 @@ import { ToolboxInfo, ToolboxItemInfo } from "blockly/core/utils/toolbox";
 import { CommandData } from "./types/command-data";
 import { Root } from "./types/new-format/root";
 import { Parameter } from "./types/parameter";
+function parameterGenerator(block: any, parameter: Parameter) {
+	let options: any = [];
+	switch (parameter.type) {
+		case "select":
+			for (const option of Object.values(parameter.options!)) {
+				options.push([option, option.toLocaleUpperCase()]);
+			}
+			block.appendField(new Blockly.FieldDropdown(options), parameter.name);
+			break;
+		// Create a dropdown using the specified options
+		case "enum":
+			for (const option of parameter.options!) {
+				options.push([option, option.toLocaleUpperCase()]);
+			}
+			block.appendField(new Blockly.FieldDropdown(options), parameter.name);
+			break;
+		case "javaObject":
+		case "number":
+			block.appendField(new Blockly.FieldNumber(0), parameter.name);
+			break;
+		case "raw":
+			block.appendField(new Blockly.FieldTextInput(), parameter.name);
+			break;
+		default:
+			block.appendField("");
+			break;
+	}
+}
+
 /**
- * Takes command data from a JSON file and generates the corresponding blocks
+ * Takes command data from a JSON file and generates the corresponding blocks.
+ * This works with the AutoBlocks format
  * @param commandData Command data from JSON
  */
 export function loadBlocks(commandData: CommandData) {
@@ -15,70 +45,9 @@ export function loadBlocks(commandData: CommandData) {
 			init: function () {
 				// Creates a label for this block, which is the name specified in JSON
 				let block = this.appendDummyInput().appendField(command.name);
-				for (let index = 0; index < params.length; index++) {
-					const parameter: Parameter = params[index];
-					switch (parameter.type) {
-						case "enum":
-							let options: any = [];
-							for (let index = 0; index < parameter.options!.length; index++) {
-								const option = parameter.options![index];
-								options.push([option, option.toLocaleUpperCase()]);
-							}
-							block.appendField(
-								new Blockly.FieldDropdown(options),
-								parameter.name
-							);
-							break;
-						case "number":
-							block.appendField(new Blockly.FieldNumber(0), parameter.name);
-							break;
-						case "raw":
-							block.appendField(new Blockly.FieldTextInput(), parameter.name);
-							break;
-						default:
-							block.appendField("");
-							break;
-					}
-				}
-				this.setPreviousStatement(true, null);
-				this.setNextStatement(true, null);
-				this.setColour(230);
-			}
-		};
-	}
-}
-export function load(commandData: Root) {
-	// Loop over all commands
-	for (const [commandName, command] of Object.entries(commandData.commands)) {
-		Blockly.Blocks[commandName] = {
-			init: function () {
-				// Creates a label for this block, which is the name specified in JSON
-				let block = this.appendDummyInput().appendField(commandName);
-				// if (Object.is(command.parameters, {})) { return; }
-				for (const [parameterName, parameter] of Object.entries(
-					command.parameters
-				)) {
-					switch (parameter.type) {
-						case "select":
-							let options: any = [];
-							for (const [key, option] of Object.entries(parameter.options!)) {
-								options.push([option, option.toLocaleUpperCase()]);
-							}
-							block.appendField(
-								new Blockly.FieldDropdown(options),
-								parameter.name
-							);
-							break;
-						case "number":
-							block.appendField(new Blockly.FieldNumber(0), parameter.name);
-							break;
-						case "javaObject":
-							block.appendField(new Blockly.FieldTextInput(), parameter.name);
-							break;
-						default:
-							block.appendField("");
-							break;
-					}
+				// Generate a new input for all the parameters
+				for (const parameter of params) {
+					parameterGenerator(block, parameter);
 				}
 				this.setPreviousStatement(true, null);
 				this.setNextStatement(true, null);
@@ -88,20 +57,46 @@ export function load(commandData: Root) {
 	}
 }
 /**
- * Creates a list of commands from a JSON file
+ * Takes command data from a JSON file and generates the corresponding blocks.
+ * This works with the scripting format
+ * @param commandData Command data from JSON
+ */
+export function load(commandData: Root) {
+	// Loop over all commands
+	for (const [commandName, command] of Object.entries(commandData.commands)) {
+		Blockly.Blocks[commandName] = {
+			init: function () {
+				// Creates a label for this block, which is the name specified in JSON
+				let block = this.appendDummyInput().appendField(commandName);
+				for (const parameter of Object.values(command.parameters)) {
+					parameterGenerator(block, parameter);
+				}
+				this.setPreviousStatement(true, null);
+				this.setNextStatement(true, null);
+				this.setColour(230);
+			}
+		};
+	}
+}
+/**
+ * Creates a list of commands from a JSON file.
+ * This works with the AutoBlocks format
  * @param commandData Command data from JSON
  * @returns The list of commands in the JSON file
  */
 export function generateCommandList(commandData: CommandData): Array<string> {
 	let commandList = [];
-	let commands = commandData.commands;
-	for (let index = 0; index < commands.length; index++) {
-		const command = commands[index];
+	for (const command in commandData.commands) {
 		commandList.push(command.name);
 	}
 	return commandList;
 }
-
+/**
+ * Creates a list of commands from a JSON file.
+ * This works with the scripting format
+ * @param commandData Command data from JSON
+ * @returns The list of commands in the JSON file
+ */
 export function gen(commandData: Root) {
 	let commandList = [];
 	for (const commandName of Object.keys(commandData.commands)) {
@@ -122,6 +117,7 @@ export function createToolbox(commands: Array<string>): ToolboxInfo {
 		kind: "categoryToolbox",
 		contents: []
 	};
+	// Create a command category, and initialize it with the Method block
 	let commandCategory: {
 		kind: string;
 		name: string;
@@ -137,6 +133,7 @@ export function createToolbox(commands: Array<string>): ToolboxInfo {
 		let block: ToolboxItemInfo = { kind: "block", type: command };
 		commandCategory.contents.push(block);
 	}
+	// Create a hardcoded category for the command groups
 	let commandGroupCategory = {
 		kind: "category",
 		name: "Command Groups",
@@ -147,6 +144,7 @@ export function createToolbox(commands: Array<string>): ToolboxInfo {
 			{ kind: "block", type: "SequentialCommandGroup" }
 		]
 	};
+	// Combine the categories into the toolbox
 	toolbox.contents.push(commandGroupCategory, commandCategory);
 	return toolbox;
 }

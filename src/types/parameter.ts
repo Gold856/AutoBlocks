@@ -1,5 +1,5 @@
 export interface Parameter {
-	type: "enum" | "raw" | "number";
+	type: "enum" | "select" | "raw" | "javaObject" | "number";
 	name: string;
 	options?: Array<string>;
 }

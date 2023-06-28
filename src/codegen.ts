@@ -25,6 +25,11 @@ javaGenerator.scrub_ = function processJavaCommandCode(
 	return code + ")\n";
 };
 scriptGenerator.INDENT = "	";
+/**
+ * Takes in command data from a JSON file, and calculates the code to emit based on the parameters.
+ * @param commandData Command data from JSON
+ * @param generator A code generator
+ */
 export function scriptCommandCodeGen(
 	commandData: CommandData,
 	generator: Generator
