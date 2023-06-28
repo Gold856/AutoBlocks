@@ -28,7 +28,6 @@ body {
 	margin: 0;
 	display: flex;
 	flex-direction: column;
-	place-items: center;
 	min-width: 320px;
 	min-height: 100vh;
 }
@@ -68,14 +67,20 @@ input::file-selector-button {
 }
 
 #blocklyArea {
-	margin: 0;
-	height: 100vh;
+	height: fit-content;
+	display: flex;
 	width: 100vw;
 }
 
 #blocklyDiv {
-	margin: 0;
-	position: absolute;
+	width: 70vw;
+	height: 95.4vh;
+}
+
+#code {
+	border: 0.1vh solid black;
+	width: 30vw;
+	height: 95.2vh;
 }
 
 .logo {

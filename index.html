@@ -14,12 +14,15 @@
 	</head>
 
 	<body>
-		<div id="blocklyArea">
+		<div id="toolbar">
 			<span>Load Commands:</span>
 			<input id="fileInput" type="file" accept="application/json" />
 			<button id="save">Save</button>
 			<span>Load Workspace:</span>
 			<input id="load" type="file" accept="application/json" />
+		</div>
+		<div id="blocklyArea">
+			<div id="code"></div>
 			<div id="blocklyDiv"></div>
 		</div>
 		<script type="module" src="/src/main.ts"></script>

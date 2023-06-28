@@ -104,7 +104,7 @@ export function generateCommandList(commandData: CommandData): Array<string> {
 
 export function gen(commandData: Root) {
 	let commandList = [];
-	for (const commandName in Object.keys(commandData.commands)) {
+	for (const commandName of Object.keys(commandData.commands)) {
 		commandList.push(commandName);
 	}
 	return commandList;
