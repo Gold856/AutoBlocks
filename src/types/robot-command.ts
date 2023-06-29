@@ -1,6 +1,6 @@
-import { Parameter } from "./parameter";
+import { Parameter } from "./new-format/parameter";
 
 export interface RobotCommand {
 	name: string;
-	params: Array<Parameter>;
+	parameters: Array<Parameter>;
 }

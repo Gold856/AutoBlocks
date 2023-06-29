@@ -2,17 +2,13 @@ import * as Blockly from "blockly";
 import { ToolboxInfo, ToolboxItemInfo } from "blockly/core/utils/toolbox";
 import { CommandData } from "./types/command-data";
 import { Root } from "./types/new-format/root";
-import { Parameter } from "./types/parameter";
+import { Parameter } from "./types/new-format/parameter";
+import { RobotCommand } from "./types/robot-command";
 function parameterGenerator(block: any, parameter: Parameter) {
 	let options: any = [];
 	switch (parameter.type) {
-		case "select":
-			for (const option of Object.values(parameter.options!)) {
-				options.push([option, option.toLocaleUpperCase()]);
-			}
-			block.appendField(new Blockly.FieldDropdown(options), parameter.name);
-			break;
 		// Create a dropdown using the specified options
+		case "select":
 		case "enum":
 			for (const option of parameter.options!) {
 				options.push([option, option.toLocaleUpperCase()]);
@@ -31,7 +27,26 @@ function parameterGenerator(block: any, parameter: Parameter) {
 			break;
 	}
 }
-
+/**
+ * Defines Blockly blocks with the Java command name as the block name and using the command definition to define parameters
+ * @param commandName The command name in Java
+ * @param command The command definition
+ */
+function defineBlocks(commandName: string, command: RobotCommand) {
+	Blockly.Blocks[commandName] = {
+		init: function () {
+			// Creates a label for this block, which is the name specified in JSON
+			let block = this.appendDummyInput().appendField(commandName);
+			// Generate a new input for all the parameters
+			for (const parameter of command.parameters) {
+				parameterGenerator(block, parameter);
+			}
+			this.setPreviousStatement(true, null);
+			this.setNextStatement(true, null);
+			this.setColour(230);
+		}
+	};
+}
 /**
  * Takes command data from a JSON file and generates the corresponding blocks.
  * This works with the AutoBlocks JSON format
@@ -40,20 +55,7 @@ function parameterGenerator(block: any, parameter: Parameter) {
 export function loadBlocks(commandData: CommandData) {
 	/** Loop over the array of commands */
 	for (const command of commandData.commands) {
-		let params = command.params;
-		Blockly.Blocks[command.name] = {
-			init: function () {
-				// Creates a label for this block, which is the name specified in JSON
-				let block = this.appendDummyInput().appendField(command.name);
-				// Generate a new input for all the parameters
-				for (const parameter of params) {
-					parameterGenerator(block, parameter);
-				}
-				this.setPreviousStatement(true, null);
-				this.setNextStatement(true, null);
-				this.setColour(230);
-			}
-		};
+		defineBlocks(command.name, command);
 	}
 }
 /**
@@ -66,18 +68,7 @@ export function load(commandData: Root) {
 	for (const [javaCommandName, command] of Object.entries(
 		commandData.commands
 	)) {
-		Blockly.Blocks[javaCommandName] = {
-			init: function () {
-				// Creates a label for this block, which is the name specified in JSON
-				let block = this.appendDummyInput().appendField(javaCommandName);
-				for (const parameter of Object.values(command.parameters)) {
-					parameterGenerator(block, parameter);
-				}
-				this.setPreviousStatement(true, null);
-				this.setNextStatement(true, null);
-				this.setColour(230);
-			}
-		};
+		defineBlocks(javaCommandName, command);
 	}
 }
 /**

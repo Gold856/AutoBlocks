@@ -2,10 +2,11 @@
 	"commands": [
 		{
 			"name": "ExampleCommand",
-			"params": [
+			"parameters": [
 				{
 					"type": "enum",
-					"name": "ExamplePosition",
+					"name": "Position",
+					"prefix": "ExamplePosition",
 					"options": ["HIGH", "MEDIUM", "LOW"]
 				},
 				{
@@ -16,10 +17,11 @@
 		},
 		{
 			"name": "ETCommand",
-			"params": [
+			"parameters": [
 				{
 					"type": "enum",
 					"name": "Position",
+					"prefix": "Position",
 					"options": ["LOL", "MEH", "LOW"]
 				},
 				{

@@ -69,7 +69,7 @@ export function javaAutoBlocksCommandCodeGen(
 	let commands = commandData.commands;
 	// Iterate over each command
 	for (const command of commands) {
-		const params = command.params;
+		const params = command.parameters;
 		// For each command, generate the Java code associated with it
 		// @ts-ignore
 		generator[command.name] = (block: Block) => {
@@ -81,7 +81,7 @@ export function javaAutoBlocksCommandCodeGen(
 				let argument = block.getFieldValue(parameter.name);
 				// If the parameter is an enum, the name is the class the enum belongs to, so append it before the selected option
 				if (parameter.type == "enum") {
-					let enumValue: string = parameter.name + `.${argument}`;
+					let enumValue: string = parameter.prefix + `.${argument}`;
 					code += enumValue;
 					// Otherwise, just append the argument
 				} else {
