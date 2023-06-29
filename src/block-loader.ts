@@ -34,8 +34,8 @@ function parameterGenerator(block: any, parameter: Parameter) {
 
 /**
  * Takes command data from a JSON file and generates the corresponding blocks.
- * This works with the AutoBlocks format
- * @param commandData Command data from JSON
+ * This works with the AutoBlocks JSON format
+ * @param commandData Command data from AutoBlocks JSON
  */
 export function loadBlocks(commandData: CommandData) {
 	/** Loop over the array of commands */
@@ -58,16 +58,18 @@ export function loadBlocks(commandData: CommandData) {
 }
 /**
  * Takes command data from a JSON file and generates the corresponding blocks.
- * This works with the scripting format
- * @param commandData Command data from JSON
+ * This works with the scripting JSON format
+ * @param commandData Command data from scripting JSON
  */
 export function load(commandData: Root) {
 	// Loop over all commands
-	for (const [commandName, command] of Object.entries(commandData.commands)) {
-		Blockly.Blocks[commandName] = {
+	for (const [javaCommandName, command] of Object.entries(
+		commandData.commands
+	)) {
+		Blockly.Blocks[javaCommandName] = {
 			init: function () {
 				// Creates a label for this block, which is the name specified in JSON
-				let block = this.appendDummyInput().appendField(commandName);
+				let block = this.appendDummyInput().appendField(javaCommandName);
 				for (const parameter of Object.values(command.parameters)) {
 					parameterGenerator(block, parameter);
 				}
@@ -80,21 +82,21 @@ export function load(commandData: Root) {
 }
 /**
  * Creates a list of commands from a JSON file.
- * This works with the AutoBlocks format
- * @param commandData Command data from JSON
+ * This works with the AutoBlocks JSON format
+ * @param commandData Command data from AutoBlocks JSON
  * @returns The list of commands in the JSON file
  */
 export function generateCommandList(commandData: CommandData): Array<string> {
 	let commandList = [];
-	for (const command in commandData.commands) {
+	for (const command of commandData.commands) {
 		commandList.push(command.name);
 	}
 	return commandList;
 }
 /**
  * Creates a list of commands from a JSON file.
- * This works with the scripting format
- * @param commandData Command data from JSON
+ * This works with the scripting JSON format
+ * @param commandData Command data from scripting JSON
  * @returns The list of commands in the JSON file
  */
 export function gen(commandData: Root) {

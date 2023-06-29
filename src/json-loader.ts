@@ -6,7 +6,7 @@ import {
 	load,
 	loadBlocks
 } from "./block-loader";
-import { javaCommandCodeGen, javaGenerator } from "./codegen";
+import { javaAutoBlocksCommandCodeGen, javaGenerator } from "./codegen";
 import { CommandData } from "./types/command-data";
 import { Root } from "./types/new-format/root";
 const jsonInput = document.getElementById("fileInput")! as HTMLInputElement;
@@ -38,11 +38,11 @@ export function activateJsonLoader(workspace: WorkspaceSvg) {
 			workspace.updateToolbox(
 				createToolbox(generateCommandList(commandData as CommandData))
 			);
-			javaCommandCodeGen(commandData as CommandData, javaGenerator);
+			javaAutoBlocksCommandCodeGen(commandData as CommandData, javaGenerator);
 		} else {
 			load(commandData as Root);
 			workspace.updateToolbox(createToolbox(gen(commandData as Root)));
-			javaCommandCodeGen(commandData, javaGenerator);
+			javaAutoBlocksCommandCodeGen(commandData, javaGenerator);
 		}
 	});
 	// Magic code to save workspace as JSON

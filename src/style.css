@@ -13,7 +13,18 @@
 	-moz-osx-font-smoothing: grayscale;
 	-webkit-text-size-adjust: 100%;
 }
+pre {
+	margin: 0;
+	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+	line-height: 1.5;
+	font-weight: 400;
 
+	font-synthesis: none;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	-webkit-text-size-adjust: 100%;
+}
 a {
 	font-weight: 500;
 	color: #646cff;
@@ -78,9 +89,17 @@ input::file-selector-button {
 }
 
 #code {
+	display: block;
+	flex-direction: column;
 	border: 0.1vh solid black;
 	width: 30vw;
 	height: 95.2vh;
+}
+
+#copyButton {
+	float: right;
+	width: 10vh;
+	height: 4vh;
 }
 
 .logo {

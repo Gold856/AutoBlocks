@@ -1,5 +1,5 @@
 import * as Blockly from "blockly";
-import { javaGenerator } from "./codegen";
+import { javaGenerator, scriptGenerator } from "./codegen";
 
 /**
  * Initializes blocks that are always in the workspace, such as command groups
@@ -103,5 +103,20 @@ export function initHardcodedBlocks() {
 		return `public static Command ${methodName}() {
 			return${commands};
 		}`;
+	}; // @ts-ignore
+	scriptGenerator["ParallelCommandGroup"] = (block: Block): string => {
+		// Prefix the generated code with the constructor and add commands from attached blocks
+		return "parallel\n" + scriptGenerator.statementToCode(block, "commands");
+	};
+	// @ts-ignore
+	scriptGenerator["SequentialCommandGroup"] = (block: Block): string => {
+		// Prefix the generated code with the constructor and add commands from attached blocks
+		return "sequential\n" + scriptGenerator.statementToCode(block, "commands");
+	};
+	// @ts-ignore
+	scriptGenerator["Method"] = (block: Block): string => {
+		const methodName = block.getFieldValue("MethodName");
+		const commands = scriptGenerator.statementToCode(block, "commands");
+		return `${methodName}\n${commands}`;
 	};
 }
