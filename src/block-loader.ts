@@ -4,7 +4,12 @@ import { CommandData } from "./types/command-data";
 import { Root } from "./types/new-format/root";
 import { Parameter } from "./types/new-format/parameter";
 import { RobotCommand } from "./types/robot-command";
-function parameterGenerator(block: any, parameter: Parameter) {
+/**
+ * Adds a field to the given block using the parameter data
+ * @param block The block to add a field to
+ * @param parameter Parameter data
+ */
+function generateParameter(block: any, parameter: Parameter) {
 	let options: any = [];
 	switch (parameter.type) {
 		// Create a dropdown using the specified options
@@ -28,18 +33,18 @@ function parameterGenerator(block: any, parameter: Parameter) {
 	}
 }
 /**
- * Defines Blockly blocks with the Java command name as the block name and using the command definition to define parameters
+ * Defines a block with the Java command name as the block name and using the command definition to define parameters
  * @param commandName The command name in Java
  * @param command The command definition
  */
-function defineBlocks(commandName: string, command: RobotCommand) {
+function defineBlock(commandName: string, command: RobotCommand) {
 	Blockly.Blocks[commandName] = {
 		init: function () {
 			// Creates a label for this block, which is the name specified in JSON
 			let block = this.appendDummyInput().appendField(commandName);
 			// Generate a new input for all the parameters
 			for (const parameter of command.parameters) {
-				parameterGenerator(block, parameter);
+				generateParameter(block, parameter);
 			}
 			this.setPreviousStatement(true, null);
 			this.setNextStatement(true, null);
@@ -55,7 +60,7 @@ function defineBlocks(commandName: string, command: RobotCommand) {
 export function loadBlocksAutoBlocks(commandData: CommandData) {
 	/** Loop over the array of commands */
 	for (const command of commandData.commands) {
-		defineBlocks(command.name, command);
+		defineBlock(command.name, command);
 	}
 }
 /**
@@ -68,7 +73,7 @@ export function loadBlocksScripting(commandData: Root) {
 	for (const [javaCommandName, command] of Object.entries(
 		commandData.commands
 	)) {
-		defineBlocks(javaCommandName, command);
+		defineBlock(javaCommandName, command);
 	}
 }
 /**
