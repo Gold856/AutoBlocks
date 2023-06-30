@@ -52,7 +52,7 @@ function defineBlocks(commandName: string, command: RobotCommand) {
  * This works with the AutoBlocks JSON format
  * @param commandData Command data from AutoBlocks JSON
  */
-export function loadAutoBlocksBlocks(commandData: CommandData) {
+export function loadBlocksAutoBlocks(commandData: CommandData) {
 	/** Loop over the array of commands */
 	for (const command of commandData.commands) {
 		defineBlocks(command.name, command);
@@ -63,7 +63,7 @@ export function loadAutoBlocksBlocks(commandData: CommandData) {
  * This works with the scripting JSON format
  * @param commandData Command data from scripting JSON
  */
-export function loadScriptingBlocks(commandData: Root) {
+export function loadBlocksScripting(commandData: Root) {
 	// Loop over all commands
 	for (const [javaCommandName, command] of Object.entries(
 		commandData.commands
@@ -77,7 +77,7 @@ export function loadScriptingBlocks(commandData: Root) {
  * @param commandData Command data from AutoBlocks JSON
  * @returns The list of commands in the JSON file
  */
-export function generateCommandListFromAutoBlocks(
+export function generateCommandListAutoBlocks(
 	commandData: CommandData
 ): Array<string> {
 	let commandList = [];
@@ -92,7 +92,7 @@ export function generateCommandListFromAutoBlocks(
  * @param commandData Command data from scripting JSON
  * @returns The list of commands in the JSON file
  */
-export function generateCommandListFromScripting(commandData: Root) {
+export function generateCommandListScripting(commandData: Root) {
 	let commandList = [];
 	for (const commandName of Object.keys(commandData.commands)) {
 		commandList.push(commandName);

@@ -1,8 +1,8 @@
 import * as Blockly from "blockly";
 import {
 	createToolbox,
-	generateCommandListFromScripting,
-	loadScriptingBlocks
+	generateCommandListScripting,
+	loadBlocksScripting
 } from "./block-loader";
 import {
 	javaGenerator,
@@ -15,9 +15,9 @@ import { activateJsonLoader } from "./json-loader";
 import "./style.css";
 import test from "./testcommandlist.json" assert { type: "json" };
 initHardcodedBlocks();
-loadScriptingBlocks(test);
+loadBlocksScripting(test);
 let generator = javaGenerator;
-const toolbox = createToolbox(generateCommandListFromScripting(test));
+const toolbox = createToolbox(generateCommandListScripting(test));
 const blocklyDiv = document.getElementById("blocklyDiv")!;
 const workspace = Blockly.inject(blocklyDiv, { toolbox: toolbox });
 const languageToggle = document.getElementById("languageToggle")!;
