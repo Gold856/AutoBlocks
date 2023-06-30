@@ -27,6 +27,7 @@ defineScriptCodeGenScripting(test, scriptGenerator);
 // Add text node to code output element
 document.getElementById("code")!.append("");
 
+// Event listeners
 workspace.addChangeListener((event: any) => {
 	// If there's anything happens to a block or we load a new workspace, regenerate code
 	if (
@@ -61,4 +62,4 @@ languageToggle.addEventListener("click", () => {
 	}
 	workspace.fireChangeListener(new Blockly.Events.BlockBase());
 });
-window.addEventListener("resize", () => Blockly.svgResize(workspace), false);
+window.addEventListener("resize", () => Blockly.svgResize(workspace));

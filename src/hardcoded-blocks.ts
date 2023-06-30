@@ -8,6 +8,7 @@ import { javaGenerator, scriptGenerator } from "./codegen";
  * All hardcoded blocks should be added here and in block-loader.ts
  */
 export function initHardcodedBlocks() {
+	// Initialize blocks
 	Blockly.Blocks["ParallelCommandGroup"] = {
 		init: function () {
 			blockInitFunction.call(this, "ParallelCommandGroup");
@@ -40,9 +41,10 @@ export function initHardcodedBlocks() {
 			this.setHelpUrl("");
 		}
 	};
+	// Initialize Java codegen for blocks
 	// @ts-ignore
 	javaGenerator["ParallelCommandGroup"] = (block: Block): string => {
-		// Prefix the generated code with the constructor and add commands from attached blocks
+		// Prefix the generated code from the attached blocks with the constructor
 		return (
 			"new ParallelCommandGroup(\n" +
 			javaGenerator.statementToCode(block, "commands")
@@ -50,7 +52,7 @@ export function initHardcodedBlocks() {
 	};
 	// @ts-ignore
 	javaGenerator["ParallelDeadlineGroup"] = (block: Block): string => {
-		// Prefix the generated code with the constructor and add commands from attached blocks
+		// Prefix the generated code from the attached blocks with the constructor
 		return (
 			"new ParallelDeadlineGroup(\n" +
 			javaGenerator.statementToCode(block, "commands")
@@ -58,7 +60,7 @@ export function initHardcodedBlocks() {
 	};
 	// @ts-ignore
 	javaGenerator["ParallelRaceGroup"] = (block: Block): string => {
-		// Prefix the generated code with the constructor and add commands from attached blocks
+		// Prefix the generated code from the attached blocks with the constructor
 		return (
 			"new ParallelRaceGroup(\n" +
 			javaGenerator.statementToCode(block, "commands")
@@ -66,7 +68,7 @@ export function initHardcodedBlocks() {
 	};
 	// @ts-ignore
 	javaGenerator["SequentialCommandGroup"] = (block: Block): string => {
-		// Prefix the generated code with the constructor and add commands from attached blocks
+		// Prefix the generated code from the attached blocks with the constructor
 		return (
 			"new SequentialCommandGroup(\n" +
 			javaGenerator.statementToCode(block, "commands")
@@ -77,42 +79,52 @@ export function initHardcodedBlocks() {
 		const methodName = block.getFieldValue("MethodName");
 		const commands = javaGenerator.statementToCode(block, "commands");
 		return `public static Command ${methodName}() {\n\treturn${commands};\n}`;
-	}; // @ts-ignore
+	};
+	// Initialize script codegen for blocks
+	// @ts-ignore
 	scriptGenerator["ParallelCommandGroup"] = (block: Block): string => {
-		// Prefix the generated code with the constructor and add commands from attached blocks
 		const nextCode = scriptGenerator.statementToCode(block, "commands");
+		// Insert the command group name, if there's blocks in the command group,
+		// go to the next line and add the code from the blocks
 		if (nextCode) {
 			return "parallel\n" + nextCode;
+			// Otherwise, just insert the command group name
 		} else {
 			return "parallel";
 		}
 	};
 	// @ts-ignore
 	scriptGenerator["ParallelDeadlineGroup"] = (block: Block): string => {
-		// Prefix the generated code with the constructor and add commands from attached blocks
+		// Insert the command group name, if there's blocks in the command group,
+		// go to the next line and add the code from the blocks
 		const nextCode = scriptGenerator.statementToCode(block, "commands");
 		if (nextCode) {
 			return "parallelDeadline\n" + nextCode;
+			// Otherwise, just insert the command group name
 		} else {
 			return "parallelDeadline";
 		}
 	};
 	// @ts-ignore
 	scriptGenerator["ParallelRaceGroup"] = (block: Block): string => {
-		// Prefix the generated code with the constructor and add commands from attached blocks
+		// Insert the command group name, if there's blocks in the command group,
+		// go to the next line and add the code from the blocks
 		const nextCode = scriptGenerator.statementToCode(block, "commands");
 		if (nextCode) {
 			return "parallelRace\n" + nextCode;
+			// Otherwise, just insert the command group name
 		} else {
 			return "parallelRace";
 		}
 	};
 	// @ts-ignore
 	scriptGenerator["SequentialCommandGroup"] = (block: Block): string => {
-		// Prefix the generated code with the constructor and add commands from attached blocks
+		// Insert the command group name, if there's blocks in the command group,
+		// go to the next line and add the code from the blocks
 		const nextCode = scriptGenerator.statementToCode(block, "commands");
 		if (nextCode) {
 			return "sequential\n" + nextCode;
+			// Otherwise, just insert the command group name
 		} else {
 			return "sequential";
 		}
@@ -125,7 +137,7 @@ export function initHardcodedBlocks() {
 	};
 }
 /**
- * Initializes the hardcoded blocks
+ * Initializes a hardcoded block
  * @param blockName The name of the block
  */
 function blockInitFunction(blockName: string) {
