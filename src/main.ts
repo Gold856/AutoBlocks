@@ -6,8 +6,8 @@ import {
 } from "./block-loader";
 import {
 	javaGenerator,
-	javaScriptingCommandCodeGen,
-	scriptCommandCodeGen,
+	defineJavaCodeGenScripting,
+	defineScriptCodeGenScripting,
 	scriptGenerator
 } from "./codegen";
 import { initHardcodedBlocks } from "./hardcoded-blocks";
@@ -22,8 +22,8 @@ const blocklyDiv = document.getElementById("blocklyDiv")!;
 const workspace = Blockly.inject(blocklyDiv, { toolbox: toolbox });
 const languageToggle = document.getElementById("languageToggle")!;
 activateJsonLoader(workspace);
-javaScriptingCommandCodeGen(test, javaGenerator);
-scriptCommandCodeGen(test, scriptGenerator);
+defineJavaCodeGenScripting(test, javaGenerator);
+defineScriptCodeGenScripting(test, scriptGenerator);
 // Add text node to code output element
 document.getElementById("code")!.append("");
 

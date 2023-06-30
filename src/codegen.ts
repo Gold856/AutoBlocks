@@ -1,5 +1,7 @@
 import { Block, Generator } from "blockly";
 import { CommandData } from "./types/command-data";
+import { Command } from "./types/new-format/command";
+import { Parameter } from "./types/new-format/parameter";
 import { Root } from "./types/new-format/root";
 export const javaGenerator: Generator = new Generator("Java");
 export const scriptGenerator: Generator = new Generator("Script");
@@ -44,42 +46,31 @@ scriptGenerator.scrub_ = function processScriptCommandCode(
 	}
 };
 /**
- * Takes in command data from a JSON file, and calculates the code to emit based on the parameters.
- * Code emitted is script code, and this works with the scripting JSON format
+ *
+ * Defines how script code should be generated for each command in the command data.
+ *
+ * This works with the scripting JSON format
  * @param commandData Command data from scripting JSON
  * @param generator A code generator
  */
-export function scriptCommandCodeGen(commandData: Root, generator: Generator) {
+export function defineScriptCodeGenScripting(
+	commandData: Root,
+	generator: Generator
+) {
 	let commands = commandData.commands;
 	// Iterate over each command
 	for (const [javaCommandName, command] of Object.entries(commands)) {
-		const params = command.parameters;
-		// @ts-ignore
-		generator[javaCommandName] = (block: Block) => {
-			let code = command.name;
-			for (const parameter of params) {
-				// Value from user
-				let argument = block.getFieldValue(parameter.name);
-				// If the parameter is an enum, the name is the class the enum belongs to, so append it before the selected option
-				if (parameter.type == "select") {
-					let enumValue: string = command.prefix + `.${argument}`;
-					code += " " + enumValue;
-					// Otherwise, just append the argument
-				} else {
-					code += " " + argument;
-				}
-			}
-			return code;
-		};
+		defineScriptCodegen(javaCommandName, command, generator);
 	}
 }
 /**
- * Takes in command data from a JSON file, and calculates the code to emit based on the parameters.
- * Code emitted is Java code, and this works with the AutoBlocks JSON format
+ * Defines how Java code should be generated for each command in the command data.
+ *
+ * This works with the AutoBlocks JSON format
  * @param commandData Command data from AutoBlocks JSON
  * @param generator A code generator
  */
-export function javaAutoBlocksCommandCodeGen(
+export function defineJavaCodeGenAutoBlocks(
 	commandData: CommandData,
 	generator: Generator
 ) {
@@ -88,40 +79,17 @@ export function javaAutoBlocksCommandCodeGen(
 	for (const command of commands) {
 		const params = command.parameters;
 		// For each command, generate the Java code associated with it
-		// @ts-ignore
-		generator[command.name] = (block: Block) => {
-			let code: string = `new ${command.name}(`;
-			// Loop over each parameter to handle enums and commas
-			for (let index = 0; index < params.length; index++) {
-				const parameter = params[index];
-				// Value from user
-				let argument = block.getFieldValue(parameter.name);
-				// If the parameter is an enum, the name is the class the enum belongs to, so append it before the selected option
-				if (parameter.type == "enum") {
-					let enumValue: string = parameter.prefix + `.${argument}`;
-					code += enumValue;
-					// Otherwise, just append the argument
-				} else {
-					code += argument;
-				}
-				// Check if we need to add commas, either it's one arg, or we have no more params
-				if (params.length == 1 || params.length - 1 == index) {
-				} else {
-					code += ",";
-				}
-			}
-			// Finish the command
-			return code;
-		};
+		defineJavaCodegen(command.name, params, generator);
 	}
 }
 /**
- * Takes in command data from a JSON file, and calculates the code to emit based on the parameters.
- * Code emitted is Java code, and this works with the scripting JSON format
+ * Defines how Java code should be generated for each command in the command data.
+ *
+ * This works with the scripting JSON format
  * @param commandData Command data from scripting JSON
  * @param generator A code generator
  */
-export function javaScriptingCommandCodeGen(
+export function defineJavaCodeGenScripting(
 	commandData: Root,
 	generator: Generator
 ) {
@@ -129,28 +97,71 @@ export function javaScriptingCommandCodeGen(
 	// Iterate over each command
 	for (const [javaCommandName, command] of Object.entries(commands)) {
 		const params = command.parameters;
-		// @ts-ignore
-		generator[javaCommandName] = (block: Block) => {
-			let code = `new ${javaCommandName}(`;
-			for (let index = 0; index < params.length; index++) {
-				const parameter = params[index];
-				// Value from user
-				let argument = block.getFieldValue(parameter.name);
-				// If the parameter is an enum, the name is the class the enum belongs to, so append it before the selected option
-				if (parameter.type == "select") {
-					let enumValue: string = command.prefix + `.${argument}`;
-					code += enumValue;
-					// Otherwise, just append the argument
-				} else {
-					code += argument;
-				}
-				// Check if we need to add commas, either it's one arg, or we have no more params
-				if (params.length == 1 || params.length - 1 == index) {
-				} else {
-					code += ",";
-				}
-			}
-			return code;
-		};
+		defineJavaCodegen(javaCommandName, params, generator);
 	}
+}
+/**
+ * Uses command data to define how a command is converted to script code
+ * @param javaCommandName The name of the command in Java
+ * @param command Command data
+ * @param generator Code generator
+ */
+function defineScriptCodegen(
+	javaCommandName: string,
+	command: Command,
+	generator: Generator
+) {
+	const params = command.parameters;
+	// @ts-ignore
+	generator[javaCommandName] = (block: Block) => {
+		let code = command.name;
+		for (const parameter of params) {
+			// Value from user
+			let argument = block.getFieldValue(parameter.name);
+			// If the parameter is an enum, the name is the class the enum belongs to, so append it before the selected option
+			if (parameter.type == "select") {
+				let enumValue: string = parameter.prefix + `.${argument}`;
+				code += " " + enumValue;
+				// Otherwise, just append the argument
+			} else {
+				code += " " + argument;
+			}
+		}
+		return code;
+	};
+}
+/**
+ * Uses command data to define how a command is converted to Java code
+ * @param javaCommandName The name of the command in Java
+ * @param params Parameter data
+ * @param generator Code generator
+ */
+function defineJavaCodegen(
+	javaCommandName: string,
+	params: Parameter[],
+	generator: Generator
+) {
+	// @ts-ignore
+	generator[javaCommandName] = (block: Block) => {
+		let code = `new ${javaCommandName}(`;
+		for (let index = 0; index < params.length; index++) {
+			const parameter = params[index];
+			// Value from user
+			let argument = block.getFieldValue(parameter.name);
+			// If the parameter is an enum, the name is the class the enum belongs to, so append it before the selected option
+			if (parameter.type == "select") {
+				let enumValue: string = parameter.prefix + `.${argument}`;
+				code += enumValue;
+				// Otherwise, just append the argument
+			} else {
+				code += argument;
+			}
+			// Check if we need to add commas, either it's one arg, or we have no more params
+			if (params.length == 1 || params.length - 1 == index) {
+			} else {
+				code += ",";
+			}
+		}
+		return code;
+	};
 }
