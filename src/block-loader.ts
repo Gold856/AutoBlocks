@@ -1,7 +1,7 @@
 import * as Blockly from "blockly";
 import { ToolboxInfo, ToolboxItemInfo } from "blockly/core/utils/toolbox";
-import { CommandData } from "./types/command-data";
-import { Root } from "./types/new-format/root";
+import { AutoBlocks } from "./types/auto-blocks";
+import { Scripting } from "./types/new-format/scripting";
 import { Parameter } from "./types/new-format/parameter";
 import { RobotCommand } from "./types/robot-command";
 /**
@@ -57,7 +57,7 @@ function defineBlock(commandName: string, command: RobotCommand) {
  * This works with the AutoBlocks JSON format
  * @param commandData Command data from AutoBlocks JSON
  */
-export function loadBlocksAutoBlocks(commandData: CommandData) {
+export function loadBlocksAutoBlocks(commandData: AutoBlocks) {
 	/** Loop over the array of commands */
 	for (const command of commandData.commands) {
 		defineBlock(command.name, command);
@@ -68,7 +68,7 @@ export function loadBlocksAutoBlocks(commandData: CommandData) {
  * This works with the scripting JSON format
  * @param commandData Command data from scripting JSON
  */
-export function loadBlocksScripting(commandData: Root) {
+export function loadBlocksScripting(commandData: Scripting) {
 	// Loop over all commands
 	for (const [javaCommandName, command] of Object.entries(
 		commandData.commands
@@ -83,7 +83,7 @@ export function loadBlocksScripting(commandData: Root) {
  * @returns The list of commands in the JSON file
  */
 export function generateCommandListAutoBlocks(
-	commandData: CommandData
+	commandData: AutoBlocks
 ): Array<string> {
 	let commandList = [];
 	for (const command of commandData.commands) {
@@ -97,7 +97,7 @@ export function generateCommandListAutoBlocks(
  * @param commandData Command data from scripting JSON
  * @returns The list of commands in the JSON file
  */
-export function generateCommandListScripting(commandData: Root) {
+export function generateCommandListScripting(commandData: Scripting) {
 	let commandList = [];
 	for (const commandName of Object.keys(commandData.commands)) {
 		commandList.push(commandName);

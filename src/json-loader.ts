@@ -7,8 +7,8 @@ import {
 	loadBlocksAutoBlocks
 } from "./block-loader";
 import { defineJavaCodeGenAutoBlocks, javaGenerator } from "./codegen";
-import { CommandData } from "./types/command-data";
-import { Root } from "./types/new-format/root";
+import { AutoBlocks } from "./types/auto-blocks";
+import { Scripting } from "./types/new-format/scripting";
 const jsonInput = document.getElementById("fileInput")! as HTMLInputElement;
 const saveButton = document.getElementById("save")! as HTMLButtonElement;
 const workspaceLoadButton = document.getElementById(
@@ -30,21 +30,21 @@ export function activateJsonLoader(workspace: WorkspaceSvg) {
 	});
 	// When the file reader is done reading the file, update Blockly with the new commands
 	commandFileReader.addEventListener("loadend", () => {
-		const commandData: CommandData | Root = JSON.parse(
+		const commandData: AutoBlocks | Scripting = JSON.parse(
 			commandFileReader.result! as string
 		);
 		if (commandData.commands instanceof Array) {
-			loadBlocksAutoBlocks(commandData as CommandData);
+			loadBlocksAutoBlocks(commandData as AutoBlocks);
 			workspace.updateToolbox(
-				createToolbox(generateCommandListAutoBlocks(commandData as CommandData))
+				createToolbox(generateCommandListAutoBlocks(commandData as AutoBlocks))
 			);
-			defineJavaCodeGenAutoBlocks(commandData as CommandData, javaGenerator);
+			defineJavaCodeGenAutoBlocks(commandData as AutoBlocks, javaGenerator);
 		} else {
-			loadBlocksScripting(commandData as Root);
+			loadBlocksScripting(commandData as Scripting);
 			workspace.updateToolbox(
-				createToolbox(generateCommandListScripting(commandData as Root))
+				createToolbox(generateCommandListScripting(commandData as Scripting))
 			);
-			defineJavaCodeGenAutoBlocks(commandData, javaGenerator);
+			defineJavaCodeGenAutoBlocks(commandData as Scripting, javaGenerator);
 		}
 	});
 	// Magic code to save workspace as JSON

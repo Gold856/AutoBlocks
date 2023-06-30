@@ -1,8 +1,8 @@
 import { Block, Generator } from "blockly";
-import { CommandData } from "./types/command-data";
+import { AutoBlocks } from "./types/auto-blocks";
 import { Command } from "./types/new-format/command";
 import { Parameter } from "./types/new-format/parameter";
-import { Root } from "./types/new-format/root";
+import { Scripting } from "./types/new-format/scripting";
 export const javaGenerator: Generator = new Generator("Java");
 export const scriptGenerator: Generator = new Generator("Script");
 javaGenerator.INDENT = "	";
@@ -54,7 +54,7 @@ scriptGenerator.scrub_ = function processScriptCommandCode(
  * @param generator A code generator
  */
 export function defineScriptCodeGenScripting(
-	commandData: Root,
+	commandData: Scripting,
 	generator: Generator
 ) {
 	let commands = commandData.commands;
@@ -71,7 +71,7 @@ export function defineScriptCodeGenScripting(
  * @param generator A code generator
  */
 export function defineJavaCodeGenAutoBlocks(
-	commandData: CommandData,
+	commandData: AutoBlocks,
 	generator: Generator
 ) {
 	let commands = commandData.commands;
@@ -90,7 +90,7 @@ export function defineJavaCodeGenAutoBlocks(
  * @param generator A code generator
  */
 export function defineJavaCodeGenScripting(
-	commandData: Root,
+	commandData: Scripting,
 	generator: Generator
 ) {
 	let commands = commandData.commands;
