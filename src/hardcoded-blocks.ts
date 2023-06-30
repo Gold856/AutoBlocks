@@ -10,46 +10,22 @@ import { javaGenerator, scriptGenerator } from "./codegen";
 export function initHardcodedBlocks() {
 	Blockly.Blocks["ParallelCommandGroup"] = {
 		init: function () {
-			this.appendDummyInput().appendField("ParallelCommandGroup");
-			this.appendStatementInput("commands").setCheck(null);
-			this.setPreviousStatement(true, null);
-			this.setNextStatement(true, null);
-			this.setColour(230);
-			this.setTooltip("");
-			this.setHelpUrl("");
+			blockInitFunction.call(this, "ParallelCommandGroup");
 		}
 	};
 	Blockly.Blocks["ParallelDeadlineGroup"] = {
 		init: function () {
-			this.appendDummyInput().appendField("ParallelDeadlineGroup");
-			this.appendStatementInput("commands").setCheck(null);
-			this.setPreviousStatement(true, null);
-			this.setNextStatement(true, null);
-			this.setColour(230);
-			this.setTooltip("");
-			this.setHelpUrl("");
+			blockInitFunction.call(this, "ParallelDeadlineGroup");
 		}
 	};
 	Blockly.Blocks["ParallelRaceGroup"] = {
 		init: function () {
-			this.appendDummyInput().appendField("ParallelRaceGroup");
-			this.appendStatementInput("commands").setCheck(null);
-			this.setPreviousStatement(true, null);
-			this.setNextStatement(true, null);
-			this.setColour(230);
-			this.setTooltip("");
-			this.setHelpUrl("");
+			blockInitFunction.call(this, "ParallelRaceGroup");
 		}
 	};
 	Blockly.Blocks["SequentialCommandGroup"] = {
 		init: function () {
-			this.appendDummyInput().appendField("SequentialCommandGroup");
-			this.appendStatementInput("commands").setCheck(null);
-			this.setPreviousStatement(true, null);
-			this.setNextStatement(true, null);
-			this.setColour(230);
-			this.setTooltip("");
-			this.setHelpUrl("");
+			blockInitFunction.call(this, "SequentialCommandGroup");
 		}
 	};
 	Blockly.Blocks["Method"] = {
@@ -112,6 +88,26 @@ export function initHardcodedBlocks() {
 		}
 	};
 	// @ts-ignore
+	scriptGenerator["ParallelDeadlineGroup"] = (block: Block): string => {
+		// Prefix the generated code with the constructor and add commands from attached blocks
+		const nextCode = scriptGenerator.statementToCode(block, "commands");
+		if (nextCode) {
+			return "parallelDeadline\n" + nextCode;
+		} else {
+			return "parallelDeadline";
+		}
+	};
+	// @ts-ignore
+	scriptGenerator["ParallelRaceGroup"] = (block: Block): string => {
+		// Prefix the generated code with the constructor and add commands from attached blocks
+		const nextCode = scriptGenerator.statementToCode(block, "commands");
+		if (nextCode) {
+			return "parallelRace\n" + nextCode;
+		} else {
+			return "parallelRace";
+		}
+	};
+	// @ts-ignore
 	scriptGenerator["SequentialCommandGroup"] = (block: Block): string => {
 		// Prefix the generated code with the constructor and add commands from attached blocks
 		const nextCode = scriptGenerator.statementToCode(block, "commands");
@@ -127,4 +123,24 @@ export function initHardcodedBlocks() {
 		const commands = scriptGenerator.statementToCode(block, "commands");
 		return `${methodName}\n${commands}`;
 	};
+}
+/**
+ * Initializes the hardcoded blocks
+ * @param blockName The name of the block
+ */
+function blockInitFunction(blockName: string) {
+	// @ts-ignore
+	this.appendDummyInput().appendField(blockName);
+	// @ts-ignore
+	this.appendStatementInput("commands").setCheck(null);
+	// @ts-ignore
+	this.setPreviousStatement(true, null);
+	// @ts-ignore
+	this.setNextStatement(true, null);
+	// @ts-ignore
+	this.setColour(230);
+	// @ts-ignore
+	this.setTooltip("");
+	// @ts-ignore
+	this.setHelpUrl("");
 }
