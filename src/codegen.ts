@@ -57,7 +57,7 @@ export function scriptCommandCodeGen(commandData: Root, generator: Generator) {
 		// @ts-ignore
 		generator[javaCommandName] = (block: Block) => {
 			let code = command.name;
-			for (const parameter of Object.values(params)) {
+			for (const parameter of params) {
 				// Value from user
 				let argument = block.getFieldValue(parameter.name);
 				// If the parameter is an enum, the name is the class the enum belongs to, so append it before the selected option
@@ -132,8 +132,8 @@ export function javaScriptingCommandCodeGen(
 		// @ts-ignore
 		generator[javaCommandName] = (block: Block) => {
 			let code = `new ${javaCommandName}(`;
-			for (let index = 0; index < Object.values(params).length; index++) {
-				const parameter = Object.values(params)[index];
+			for (let index = 0; index < params.length; index++) {
+				const parameter = params[index];
 				// Value from user
 				let argument = block.getFieldValue(parameter.name);
 				// If the parameter is an enum, the name is the class the enum belongs to, so append it before the selected option
@@ -145,10 +145,7 @@ export function javaScriptingCommandCodeGen(
 					code += argument;
 				}
 				// Check if we need to add commas, either it's one arg, or we have no more params
-				if (
-					Object.values(params).length == 1 ||
-					Object.values(params).length - 1 == index
-				) {
+				if (params.length == 1 || params.length - 1 == index) {
 				} else {
 					code += ",";
 				}
