@@ -14,18 +14,35 @@ javaGenerator.scrub_ = function processJavaCommandCode(
 	// If there's a connected block, and all attached blocks should have code generated,
 	// then close off the previous command and add a comma to include the next command
 	// @ts-ignore
-	const nextBlock = block.nextConnection && block.nextConnection.targetBlock();
+	const nextBlock = block.nextConnection?.targetBlock();
 	if (nextBlock && !thisOnly) {
 		// @ts-ignore
 		return code + "),\n" + this.blockToCode(nextBlock);
-		// Methods don't allow connections, and commands should've been caught before this. Methods are not to be modified
+		// Methods don't allow connections and are not to be modified
 	} else if (block.nextConnection == null) {
 		return code;
 	}
 	// Otherwise, close the command
-	return code + ")\n";
+	return code + ")";
 };
 scriptGenerator.INDENT = "	";
+scriptGenerator.scrub_ = function processScriptCommandCode(
+	this: Generator,
+	block: Block,
+	code: string,
+	thisOnly?: boolean
+): string {
+	// If there's a connected block, and all attached blocks should have code generated,
+	// then go to the next line and place the code of the next block
+	// @ts-ignore
+	const nextBlock = block.nextConnection?.targetBlock();
+	if (nextBlock && !thisOnly) {
+		// @ts-ignore
+		return `${code}\n${this.blockToCode(nextBlock)}`;
+	} else {
+		return code;
+	}
+};
 /**
  * Takes in command data from a JSON file, and calculates the code to emit based on the parameters.
  * Code emitted is script code, and this works with the scripting JSON format

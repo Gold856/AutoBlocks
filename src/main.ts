@@ -1,18 +1,29 @@
 import * as Blockly from "blockly";
-import { createToolbox, gen, load } from "./block-loader";
-import { javaGenerator, javaScriptingCommandCodeGen } from "./codegen";
+import {
+	createToolbox,
+	generateCommandListFromScripting,
+	loadScriptingBlocks
+} from "./block-loader";
+import {
+	javaGenerator,
+	javaScriptingCommandCodeGen,
+	scriptCommandCodeGen,
+	scriptGenerator
+} from "./codegen";
 import { initHardcodedBlocks } from "./hardcoded-blocks";
 import { activateJsonLoader } from "./json-loader";
 import "./style.css";
 import test from "./testcommandlist.json" assert { type: "json" };
 initHardcodedBlocks();
-load(test);
+loadScriptingBlocks(test);
 let generator = javaGenerator;
-const toolbox = createToolbox(gen(test));
+const toolbox = createToolbox(generateCommandListFromScripting(test));
 const blocklyDiv = document.getElementById("blocklyDiv")!;
 const workspace = Blockly.inject(blocklyDiv, { toolbox: toolbox });
+const languageToggle = document.getElementById("languageToggle")!;
 activateJsonLoader(workspace);
-javaScriptingCommandCodeGen(test, generator);
+javaScriptingCommandCodeGen(test, javaGenerator);
+scriptCommandCodeGen(test, scriptGenerator);
 // Add text node to code output element
 document.getElementById("code")!.append("");
 
@@ -39,4 +50,15 @@ document
 	.addEventListener("click", () =>
 		navigator.clipboard.writeText(generator.workspaceToCode(workspace))
 	);
+// When the button is clicked, the language outputted switches between Java and the scripting language
+languageToggle.addEventListener("click", () => {
+	if (generator == javaGenerator) {
+		generator = scriptGenerator;
+		languageToggle.textContent = "Use Java";
+	} else if (generator == scriptGenerator) {
+		generator = javaGenerator;
+		languageToggle.textContent = "Use Scripting";
+	}
+	workspace.fireChangeListener(new Blockly.Events.BlockBase());
+});
 window.addEventListener("resize", () => Blockly.svgResize(workspace), false);

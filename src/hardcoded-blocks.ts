@@ -10,7 +10,7 @@ import { javaGenerator, scriptGenerator } from "./codegen";
 export function initHardcodedBlocks() {
 	Blockly.Blocks["ParallelCommandGroup"] = {
 		init: function () {
-			this.appendDummyInput("CommandName").appendField("ParallelCommandGroup");
+			this.appendDummyInput().appendField("ParallelCommandGroup");
 			this.appendStatementInput("commands").setCheck(null);
 			this.setPreviousStatement(true, null);
 			this.setNextStatement(true, null);
@@ -100,18 +100,26 @@ export function initHardcodedBlocks() {
 	javaGenerator["Method"] = (block: Block): string => {
 		const methodName = block.getFieldValue("MethodName");
 		const commands = javaGenerator.statementToCode(block, "commands");
-		return `public static Command ${methodName}() {
-			return${commands};
-		}`;
+		return `public static Command ${methodName}() {\n\treturn${commands};\n}`;
 	}; // @ts-ignore
 	scriptGenerator["ParallelCommandGroup"] = (block: Block): string => {
 		// Prefix the generated code with the constructor and add commands from attached blocks
-		return "parallel\n" + scriptGenerator.statementToCode(block, "commands");
+		const nextCode = scriptGenerator.statementToCode(block, "commands");
+		if (nextCode) {
+			return "parallel\n" + nextCode;
+		} else {
+			return "parallel";
+		}
 	};
 	// @ts-ignore
 	scriptGenerator["SequentialCommandGroup"] = (block: Block): string => {
 		// Prefix the generated code with the constructor and add commands from attached blocks
-		return "sequential\n" + scriptGenerator.statementToCode(block, "commands");
+		const nextCode = scriptGenerator.statementToCode(block, "commands");
+		if (nextCode) {
+			return "sequential\n" + nextCode;
+		} else {
+			return "sequential";
+		}
 	};
 	// @ts-ignore
 	scriptGenerator["Method"] = (block: Block): string => {

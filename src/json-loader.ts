@@ -1,10 +1,10 @@
 import { serialization, WorkspaceSvg } from "blockly";
 import {
 	createToolbox,
-	gen,
-	generateCommandList,
-	load,
-	loadBlocks
+	generateCommandListFromScripting,
+	generateCommandListFromAutoBlocks,
+	loadScriptingBlocks,
+	loadAutoBlocksBlocks
 } from "./block-loader";
 import { javaAutoBlocksCommandCodeGen, javaGenerator } from "./codegen";
 import { CommandData } from "./types/command-data";
@@ -34,14 +34,18 @@ export function activateJsonLoader(workspace: WorkspaceSvg) {
 			commandFileReader.result! as string
 		);
 		if (commandData.commands instanceof Array) {
-			loadBlocks(commandData as CommandData);
+			loadAutoBlocksBlocks(commandData as CommandData);
 			workspace.updateToolbox(
-				createToolbox(generateCommandList(commandData as CommandData))
+				createToolbox(
+					generateCommandListFromAutoBlocks(commandData as CommandData)
+				)
 			);
 			javaAutoBlocksCommandCodeGen(commandData as CommandData, javaGenerator);
 		} else {
-			load(commandData as Root);
-			workspace.updateToolbox(createToolbox(gen(commandData as Root)));
+			loadScriptingBlocks(commandData as Root);
+			workspace.updateToolbox(
+				createToolbox(generateCommandListFromScripting(commandData as Root))
+			);
 			javaAutoBlocksCommandCodeGen(commandData, javaGenerator);
 		}
 	});

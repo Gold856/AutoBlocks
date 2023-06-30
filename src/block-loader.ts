@@ -52,7 +52,7 @@ function defineBlocks(commandName: string, command: RobotCommand) {
  * This works with the AutoBlocks JSON format
  * @param commandData Command data from AutoBlocks JSON
  */
-export function loadBlocks(commandData: CommandData) {
+export function loadAutoBlocksBlocks(commandData: CommandData) {
 	/** Loop over the array of commands */
 	for (const command of commandData.commands) {
 		defineBlocks(command.name, command);
@@ -63,7 +63,7 @@ export function loadBlocks(commandData: CommandData) {
  * This works with the scripting JSON format
  * @param commandData Command data from scripting JSON
  */
-export function load(commandData: Root) {
+export function loadScriptingBlocks(commandData: Root) {
 	// Loop over all commands
 	for (const [javaCommandName, command] of Object.entries(
 		commandData.commands
@@ -77,7 +77,9 @@ export function load(commandData: Root) {
  * @param commandData Command data from AutoBlocks JSON
  * @returns The list of commands in the JSON file
  */
-export function generateCommandList(commandData: CommandData): Array<string> {
+export function generateCommandListFromAutoBlocks(
+	commandData: CommandData
+): Array<string> {
 	let commandList = [];
 	for (const command of commandData.commands) {
 		commandList.push(command.name);
@@ -90,7 +92,7 @@ export function generateCommandList(commandData: CommandData): Array<string> {
  * @param commandData Command data from scripting JSON
  * @returns The list of commands in the JSON file
  */
-export function gen(commandData: Root) {
+export function generateCommandListFromScripting(commandData: Root) {
 	let commandList = [];
 	for (const commandName of Object.keys(commandData.commands)) {
 		commandList.push(commandName);
@@ -104,25 +106,34 @@ export function gen(commandData: Root) {
  * @param commands An array of command names
  * @returns The generated toolbox
  */
-export function createToolbox(commands: Array<string>): ToolboxInfo {
+export function createToolbox(
+	commands: Array<string>,
+	methods?: Array<string>
+): ToolboxInfo {
 	// Toolboxes start with this structure
 	let toolbox: { kind: string; contents: ToolboxItemInfo[] } = {
 		kind: "categoryToolbox",
 		contents: []
 	};
-	// Create a command category, and initialize it with the Method block
-	let commandCategory: {
-		kind: string;
-		name: string;
-		contents: ToolboxItemInfo[];
-	} = {
+	let methodCategory: Category = {
 		kind: "category",
-		name: "Commands",
+		name: "Methods",
 		contents: [{ kind: "block", type: "Method" }]
 	};
+	if (methods) {
+		for (const method of methods) {
+			let block: ToolboxItemInfo = { kind: "block", type: method };
+			methodCategory.contents.push(block);
+		}
+	}
+	// Create a command category, and initialize it with the Method block
+	let commandCategory: Category = {
+		kind: "category",
+		name: "Commands",
+		contents: []
+	};
 	// Then we push more blocks to the contents array
-	for (let index = 0; index < commands.length; index++) {
-		const command = commands[index];
+	for (const command of commands) {
 		let block: ToolboxItemInfo = { kind: "block", type: command };
 		commandCategory.contents.push(block);
 	}
@@ -138,6 +149,11 @@ export function createToolbox(commands: Array<string>): ToolboxInfo {
 		]
 	};
 	// Combine the categories into the toolbox
-	toolbox.contents.push(commandGroupCategory, commandCategory);
+	toolbox.contents.push(commandGroupCategory, commandCategory, methodCategory);
 	return toolbox;
+}
+interface Category {
+	kind: string;
+	name: string;
+	contents: ToolboxItemInfo[];
 }
