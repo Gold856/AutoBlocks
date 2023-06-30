@@ -6,7 +6,14 @@ import {
 	loadBlocksScripting,
 	loadBlocksAutoBlocks
 } from "./block-loader";
-import { defineJavaCodeGenAutoBlocks, javaGenerator } from "./codegen";
+import {
+	defineJavaCodeGenAutoBlocks,
+	defineJavaCodeGenScripting,
+	defineScriptCodeGenAutoBlocks,
+	defineScriptCodeGenScripting,
+	javaGenerator,
+	scriptGenerator
+} from "./codegen";
 import { AutoBlocks } from "./types/auto-blocks";
 import { Scripting } from "./types/new-format/scripting";
 const jsonInput = document.getElementById("fileInput")! as HTMLInputElement;
@@ -33,18 +40,22 @@ export function activateJsonLoader(workspace: WorkspaceSvg) {
 		const commandData: AutoBlocks | Scripting = JSON.parse(
 			commandFileReader.result! as string
 		);
+		// If the commands key contains an array, it's the AutoBlocks format
 		if (commandData.commands instanceof Array) {
 			loadBlocksAutoBlocks(commandData as AutoBlocks);
 			workspace.updateToolbox(
 				createToolbox(generateCommandListAutoBlocks(commandData as AutoBlocks))
 			);
 			defineJavaCodeGenAutoBlocks(commandData as AutoBlocks, javaGenerator);
+			defineScriptCodeGenAutoBlocks(commandData as AutoBlocks, scriptGenerator);
+			// Otherwise, it's the scripting format
 		} else {
 			loadBlocksScripting(commandData as Scripting);
 			workspace.updateToolbox(
 				createToolbox(generateCommandListScripting(commandData as Scripting))
 			);
-			defineJavaCodeGenAutoBlocks(commandData as Scripting, javaGenerator);
+			defineJavaCodeGenScripting(commandData as Scripting, javaGenerator);
+			defineScriptCodeGenScripting(commandData as Scripting, javaGenerator);
 		}
 	});
 	// Magic code to save workspace as JSON

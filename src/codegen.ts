@@ -46,7 +46,6 @@ scriptGenerator.scrub_ = function processScriptCommandCode(
 	}
 };
 /**
- *
  * Defines how script code should be generated for each command in the command data.
  *
  * This works with the scripting JSON format
@@ -61,6 +60,23 @@ export function defineScriptCodeGenScripting(
 	// Iterate over each command
 	for (const [javaCommandName, command] of Object.entries(commands)) {
 		defineScriptCodegen(javaCommandName, command, generator);
+	}
+}
+/**
+ * Defines how script code should be generated for each command in the command data.
+ *
+ * This works with the AutoBlocks JSON format
+ * @param commandData Command data from AutoBlocks JSON
+ * @param generator A code generator
+ */
+export function defineScriptCodeGenAutoBlocks(
+	commandData: AutoBlocks,
+	generator: Generator
+) {
+	let commands = commandData.commands;
+	// Iterate over each command
+	for (const command of commands) {
+		defineScriptCodegen(command.name, command, generator);
 	}
 }
 /**
