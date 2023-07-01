@@ -17,9 +17,11 @@ import {
 import { AutoBlocks } from "./types/auto-blocks";
 import { Scripting } from "./types/new-format/scripting";
 const jsonInput = document.getElementById("fileInput")! as HTMLInputElement;
-const saveButton = document.getElementById("save")! as HTMLButtonElement;
+const saveButton = document.getElementById(
+	"saveWorkspace"
+)! as HTMLButtonElement;
 const workspaceLoadButton = document.getElementById(
-	"load"
+	"loadWorkspace"
 )! as HTMLInputElement;
 const commandFileReader = new FileReader();
 const workspaceFileReader = new FileReader();

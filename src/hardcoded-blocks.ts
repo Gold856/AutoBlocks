@@ -150,7 +150,7 @@ function blockInitFunction(blockName: string) {
 	// @ts-ignore
 	this.setNextStatement(true, null);
 	// @ts-ignore
-	this.setColour(230);
+	this.setColour((blockName.length * 42) % 360);
 	// @ts-ignore
 	this.setTooltip("");
 	// @ts-ignore

@@ -21,11 +21,12 @@ const toolbox = createToolbox(generateCommandListScripting(test));
 const blocklyDiv = document.getElementById("blocklyDiv")!;
 const workspace = Blockly.inject(blocklyDiv, { toolbox: toolbox });
 const languageToggle = document.getElementById("languageToggle")!;
+const codeArea = document.getElementById("codeArea")!;
 activateJsonLoader(workspace);
 defineJavaCodeGenScripting(test, javaGenerator);
 defineScriptCodeGenScripting(test, scriptGenerator);
 // Add text node to code output element
-document.getElementById("code")!.append("");
+codeArea.append("");
 
 // Event listeners
 workspace.addChangeListener((event: any) => {
@@ -35,12 +36,11 @@ workspace.addChangeListener((event: any) => {
 		event instanceof Blockly.Events.FinishedLoading
 	) {
 		// Select text node and place code there
-		document.getElementById("code")!.childNodes[1].textContent =
-			generator.workspaceToCode(workspace);
+		codeArea.childNodes[1].textContent = generator.workspaceToCode(workspace);
 	}
 });
 // Makes copy button copy code to clipboard
-document.getElementById("code")!.addEventListener("click", () => {
+codeArea.addEventListener("click", () => {
 	// Blockly will automatically intercept copy and paste shortcuts so you can copy and paste blocks.
 	// The selected block needs to be deselected to allow you to select and copy the text in the code area.
 	Blockly.getSelected()?.unselect();

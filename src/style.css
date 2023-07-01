@@ -52,58 +52,58 @@ span {
 	vertical-align: middle;
 }
 
-input::file-selector-button {
-	border-radius: 8px;
-	border: 1px solid transparent;
-	padding: 0.6em 1.2em;
-	background-color: #1a1a1a;
-	cursor: pointer;
-	transition: border-color 0.25s;
-}
-
-#load {
-	vertical-align: top;
-	align-items: stretch;
-	height: 4.5vh;
-}
-
-#save {
-	vertical-align: top;
-	align-items: stretch;
-	height: 4.5vh;
-	width: 13.5vh;
-}
-
 #blocklyArea {
-	height: fit-content;
 	display: flex;
+	height: 95.4vh;
 	width: 100vw;
 }
 
-#blocklyDiv {
-	width: 70vw;
-	height: 95.4vh;
+#toolbar {
+	height: 4.5vh;
+	& input {
+		height: inherit;
+	}
+	& input::file-selector-button {
+		border-radius: 8px;
+		border: 1px solid transparent;
+		padding: 0.6em 1.2em;
+		cursor: pointer;
+		transition: border-color 0.25s;
+		height: inherit;
+	}
+	& button {
+		vertical-align: top;
+		align-items: stretch;
+		height: inherit;
+	}
+	#saveWorkspace {
+		width: 6vw;
+	}
+	#languageToggle {
+		width: 9vw;
+		min-width: fit-content;
+	}
 }
 
-#code {
+#blocklyDiv {
+	height: inherit;
+	width: 70vw;
+}
+
+#codeArea {
+	box-sizing: border-box;
 	display: block;
-	flex-direction: column;
-	border: 0.1vh solid black;
+	border: 1px solid black;
+	height: inherit;
 	width: 30vw;
-	height: 95.2vh;
 }
 
 #copyButton {
 	float: right;
-	width: 10vh;
 	height: 4vh;
-}
-
-#languageToggle {
-	vertical-align: top;
-	align-items: stretch;
-	height: 4.5vh;
-	width: 15vh;
+	width: 4vw;
+	min-width: fit-content;
+	user-select: none;
 }
 
 .logo {

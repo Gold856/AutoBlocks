@@ -103,7 +103,7 @@ function defineBlock(commandName: string, command: RobotCommand) {
 			}
 			this.setPreviousStatement(true, null);
 			this.setNextStatement(true, null);
-			this.setColour(230);
+			this.setColour((commandName.length * 142) % 360);
 		}
 	};
 }
@@ -159,8 +159,18 @@ export function createToolbox(
 			{ kind: "block", type: "SequentialCommandGroup" }
 		]
 	};
+	let variableCategory = {
+		kind: "category",
+		name: "Variables",
+		custom: "VARIABLE"
+	};
 	// Combine the categories into the toolbox
-	toolbox.contents.push(commandGroupCategory, commandCategory, methodCategory);
+	toolbox.contents.push(
+		commandGroupCategory,
+		commandCategory,
+		methodCategory,
+		variableCategory
+	);
 	return toolbox;
 }
 interface Category {
