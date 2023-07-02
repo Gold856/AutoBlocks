@@ -1,8 +1,8 @@
 import * as Blockly from "blockly";
 import { ToolboxInfo, ToolboxItemInfo } from "blockly/core/utils/toolbox";
 import { AutoBlocks } from "./types/auto-blocks";
-import { Scripting } from "./types/new-format/scripting";
 import { Parameter } from "./types/new-format/parameter";
+import { Scripting } from "./types/new-format/scripting";
 import { RobotCommand } from "./types/robot-command";
 /**
  * Takes command data from a JSON file and generates the corresponding blocks.
@@ -58,13 +58,46 @@ export function generateCommandListScripting(commandData: Scripting) {
 	}
 	return commandList;
 }
-
+/**
+ * Ensures a field's value is either a number or a variable
+ * @param currentValue The value of the field
+ */
+function fieldValidator(currentValue: string) {
+	let variables = [];
+	// Contains the containing method block
+	let methodBlock = this.getSourceBlock().getRootBlock();
+	// Get the variable attached to the method block
+	let nextVariable = methodBlock.getInputTargetBlock("Variables");
+	// If the method block has a variable attached to it
+	if (nextVariable) {
+		do {
+			// Get the declared variable name and place it in the variables array
+			variables.push(
+				(
+					nextVariable.getField("VariableDeclaration")?.getValue() as string
+				).split(" ")[1]
+			);
+			// Check if another variable exists, if it does, keep going
+			nextVariable = nextVariable.getInputTargetBlock("NextVariable");
+		} while (nextVariable);
+	}
+	// If the current field value matches one of the variables, do nothing; the value is valid
+	if (variables.find((value) => value === currentValue)) {
+		return currentValue;
+		// If the current field value is a number, do nothing; the value is valid
+	} else if (!Number.isNaN(Number.parseFloat(currentValue))) {
+		return currentValue;
+		// Otherwise, remove the value
+	} else {
+		return null;
+	}
+}
 /**
  * Adds a field to the given block using the parameter data
  * @param block The block to add a field to
  * @param parameter Parameter data
  */
-function generateParameter(block: any, parameter: Parameter) {
+function generateParameter(block: Blockly.Input, parameter: Parameter) {
 	let options: any = [];
 	switch (parameter.type) {
 		// Create a dropdown using the specified options
@@ -77,7 +110,10 @@ function generateParameter(block: any, parameter: Parameter) {
 			break;
 		case "javaObject":
 		case "number":
-			block.appendField(new Blockly.FieldNumber(0), parameter.name);
+			block.appendField(
+				new Blockly.FieldTextInput(0, fieldValidator),
+				parameter.name
+			);
 			break;
 		case "raw":
 			block.appendField(new Blockly.FieldTextInput(), parameter.name);
@@ -128,7 +164,10 @@ export function createToolbox(
 	let methodCategory: Category = {
 		kind: "category",
 		name: "Methods",
-		contents: [{ kind: "block", type: "Method" }]
+		contents: [
+			{ kind: "block", type: "Method" },
+			{ kind: "block", type: "Variable" }
+		]
 	};
 	// If there's methods available, add them to the category
 	if (methods) {

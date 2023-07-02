@@ -31,11 +31,26 @@ export function initHardcodedBlocks() {
 	};
 	Blockly.Blocks["Method"] = {
 		init: function () {
-			this.appendDummyInput().appendField(
+			this.appendValueInput("Variables").appendField(
 				new Blockly.FieldTextInput("MethodName"),
 				"MethodName"
 			);
 			this.appendStatementInput("commands").setCheck(null);
+			this.setColour(230);
+			this.setTooltip("");
+			this.setHelpUrl("");
+		}
+	};
+	Blockly.Blocks["Variable"] = {
+		init: function () {
+			this.appendValueInput("NextVariable")
+				.setCheck(null)
+				.appendField(
+					new Blockly.FieldTextInput("variable"),
+					"VariableDeclaration"
+				);
+			this.setInputsInline(false);
+			this.setOutput(true, null);
 			this.setColour(230);
 			this.setTooltip("");
 			this.setHelpUrl("");
@@ -77,8 +92,19 @@ export function initHardcodedBlocks() {
 	// @ts-ignore
 	javaGenerator["Method"] = (block: Block): string => {
 		const methodName = block.getFieldValue("MethodName");
+		const variables = javaGenerator.valueToCode(block, "Variables", 0);
 		const commands = javaGenerator.statementToCode(block, "commands");
-		return `public static Command ${methodName}() {\n\treturn${commands};\n}`;
+		return `public static Command ${methodName}(${variables}) {\n\treturn${commands};\n}`;
+	};
+	// @ts-ignore
+	javaGenerator["Variable"] = (block: Blockly.Block) => {
+		const variableDeclaration = block.getFieldValue("VariableDeclaration");
+		const code = javaGenerator.valueToCode(block, "NextVariable", 0);
+		if (code) {
+			return [`${variableDeclaration}, ${code}`, 0];
+		} else {
+			return [variableDeclaration, 0];
+		}
 	};
 	// Initialize script codegen for blocks
 	// @ts-ignore
