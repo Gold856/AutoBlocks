@@ -67,20 +67,6 @@ h1 {
 		height: inherit;
 		min-width: fit-content;
 	}
-	& label {
-		box-sizing: border-box;
-		display: inline-block;
-		width: 10vw;
-		text-align: center;
-		line-height: var(--height);
-		border-radius: 8px;
-		border: 1px solid transparent;
-		font-weight: 500;
-		color: #1a1a1a;
-		background-color: #b1b1b1;
-		cursor: pointer;
-		transition: border-color 0.25s;
-	}
 	& label:hover {
 		border-color: #646cff;
 	}
@@ -106,6 +92,21 @@ h1 {
 	border: 1px solid black;
 	height: inherit;
 	width: 30vw;
+}
+
+label {
+	box-sizing: border-box;
+	display: inline-block;
+	width: 10vw;
+	text-align: center;
+	line-height: var(--height);
+	border-radius: 8px;
+	background-color: #1a1a1a;
+	color: white;
+	border: 1px solid transparent;
+	font-weight: 500;
+	cursor: pointer;
+	transition: border-color 0.25s;
 }
 
 #copyButton {
@@ -135,18 +136,35 @@ button:focus,
 button:focus-visible {
 	outline: 4px auto -webkit-focus-ring-color;
 }
-
+@media (prefers-color-scheme: dark) {
+	.blocklyFlyoutBackground {
+		fill: #181818;
+	}
+	.blocklySvg {
+		background-color: #242424;
+	}
+	.blocklyToolboxDiv {
+		background-color: #181818;
+	}
+	.blocklyMainBackground {
+		stroke: #181818;
+	}
+}
 @media (prefers-color-scheme: light) {
 	:root {
 		color: #213547;
 		background-color: #ffffff;
 	}
-
 	a:hover {
 		color: #747bff;
 	}
 
 	button {
+		background-color: #b1b1b1;
+	}
+
+	label {
+		color: #1a1a1a;
 		background-color: #b1b1b1;
 	}
 
