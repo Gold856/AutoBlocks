@@ -1,6 +1,5 @@
-import * as Blockly from "blockly";
 import { javaGenerator, scriptGenerator } from "./codegen";
-
+import { Block, Blocks, FieldTextInput } from "blockly";
 /**
  * Initializes blocks that are always in the workspace, such as command groups
  * <p>
@@ -9,30 +8,30 @@ import { javaGenerator, scriptGenerator } from "./codegen";
  */
 export function initHardcodedBlocks() {
 	// Initialize blocks
-	Blockly.Blocks["ParallelCommandGroup"] = {
+	Blocks["ParallelCommandGroup"] = {
 		init: function () {
 			blockInitFunction.call(this, "ParallelCommandGroup");
 		}
 	};
-	Blockly.Blocks["ParallelDeadlineGroup"] = {
+	Blocks["ParallelDeadlineGroup"] = {
 		init: function () {
 			blockInitFunction.call(this, "ParallelDeadlineGroup");
 		}
 	};
-	Blockly.Blocks["ParallelRaceGroup"] = {
+	Blocks["ParallelRaceGroup"] = {
 		init: function () {
 			blockInitFunction.call(this, "ParallelRaceGroup");
 		}
 	};
-	Blockly.Blocks["SequentialCommandGroup"] = {
+	Blocks["SequentialCommandGroup"] = {
 		init: function () {
 			blockInitFunction.call(this, "SequentialCommandGroup");
 		}
 	};
-	Blockly.Blocks["Method"] = {
+	Blocks["Method"] = {
 		init: function () {
 			this.appendValueInput("Variables").appendField(
-				new Blockly.FieldTextInput("MethodName"),
+				new FieldTextInput("MethodName"),
 				"MethodName"
 			);
 			this.appendStatementInput("commands").setCheck(null);
@@ -41,14 +40,11 @@ export function initHardcodedBlocks() {
 			this.setHelpUrl("");
 		}
 	};
-	Blockly.Blocks["Variable"] = {
+	Blocks["Variable"] = {
 		init: function () {
 			this.appendValueInput("NextVariable")
 				.setCheck(null)
-				.appendField(
-					new Blockly.FieldTextInput("variable"),
-					"VariableDeclaration"
-				);
+				.appendField(new FieldTextInput("variable"), "VariableDeclaration");
 			this.setInputsInline(false);
 			this.setOutput(true, null);
 			this.setColour(230);
@@ -97,7 +93,7 @@ export function initHardcodedBlocks() {
 		return `public static Command ${methodName}(${variables}) {\n\treturn${commands};\n}`;
 	};
 	// @ts-ignore
-	javaGenerator["Variable"] = (block: Blockly.Block) => {
+	javaGenerator["Variable"] = (block: Block) => {
 		const variableDeclaration = block.getFieldValue("VariableDeclaration");
 		const code = javaGenerator.valueToCode(block, "NextVariable", 0);
 		if (code) {
@@ -166,19 +162,12 @@ export function initHardcodedBlocks() {
  * Initializes a hardcoded block
  * @param blockName The name of the block
  */
-function blockInitFunction(blockName: string) {
-	// @ts-ignore
+function blockInitFunction(this: Block, blockName: string) {
 	this.appendDummyInput().appendField(blockName);
-	// @ts-ignore
 	this.appendStatementInput("commands").setCheck(null);
-	// @ts-ignore
 	this.setPreviousStatement(true, null);
-	// @ts-ignore
 	this.setNextStatement(true, null);
-	// @ts-ignore
 	this.setColour((blockName.length * 42) % 360);
-	// @ts-ignore
 	this.setTooltip("");
-	// @ts-ignore
 	this.setHelpUrl("");
 }

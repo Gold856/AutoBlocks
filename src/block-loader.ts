@@ -1,4 +1,4 @@
-import * as Blockly from "blockly";
+import { Blocks, FieldDropdown, FieldTextInput, Input } from "blockly";
 import { ToolboxInfo, ToolboxItemInfo } from "blockly/core/utils/toolbox";
 import { AutoBlocks } from "./types/auto-blocks";
 import { Parameter } from "./types/new-format/parameter";
@@ -97,7 +97,7 @@ function fieldValidator(currentValue: string) {
  * @param block The block to add a field to
  * @param parameter Parameter data
  */
-function generateParameter(block: Blockly.Input, parameter: Parameter) {
+function generateParameter(block: Input, parameter: Parameter) {
 	let options: any = [];
 	switch (parameter.type) {
 		// Create a dropdown using the specified options
@@ -106,17 +106,14 @@ function generateParameter(block: Blockly.Input, parameter: Parameter) {
 			for (const option of parameter.options!) {
 				options.push([option, option.toLocaleUpperCase()]);
 			}
-			block.appendField(new Blockly.FieldDropdown(options), parameter.name);
+			block.appendField(new FieldDropdown(options), parameter.name);
 			break;
 		case "javaObject":
 		case "number":
-			block.appendField(
-				new Blockly.FieldTextInput(0, fieldValidator),
-				parameter.name
-			);
+			block.appendField(new FieldTextInput(0, fieldValidator), parameter.name);
 			break;
 		case "raw":
-			block.appendField(new Blockly.FieldTextInput(), parameter.name);
+			block.appendField(new FieldTextInput(), parameter.name);
 			break;
 		default:
 			block.appendField("");
@@ -129,7 +126,7 @@ function generateParameter(block: Blockly.Input, parameter: Parameter) {
  * @param command The command definition
  */
 function defineBlock(commandName: string, command: RobotCommand) {
-	Blockly.Blocks[commandName] = {
+	Blocks[commandName] = {
 		init: function () {
 			// Creates a label for this block, which is the name specified in JSON
 			let block = this.appendDummyInput().appendField(commandName);
