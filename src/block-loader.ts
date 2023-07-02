@@ -159,18 +159,8 @@ export function createToolbox(
 			{ kind: "block", type: "SequentialCommandGroup" }
 		]
 	};
-	let variableCategory = {
-		kind: "category",
-		name: "Variables",
-		custom: "VARIABLE"
-	};
 	// Combine the categories into the toolbox
-	toolbox.contents.push(
-		commandGroupCategory,
-		commandCategory,
-		methodCategory,
-		variableCategory
-	);
+	toolbox.contents.push(commandGroupCategory, commandCategory, methodCategory);
 	return toolbox;
 }
 interface Category {
