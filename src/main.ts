@@ -14,17 +14,18 @@ import { initHardcodedBlocks } from "./hardcoded-blocks";
 import { activateJsonLoader } from "./json-loader";
 import "./style.css";
 import test from "./testcommandlist.json" assert { type: "json" };
+import { Scripting } from "./types/new-format/scripting";
 initHardcodedBlocks();
-loadBlocksScripting(test);
+loadBlocksScripting(test as Scripting);
 let generator = javaGenerator;
-const toolbox = createToolbox(generateCommandListScripting(test));
+const toolbox = createToolbox(generateCommandListScripting(test as Scripting));
 const blocklyDiv = document.getElementById("blocklyDiv")!;
 const workspace = Blockly.inject(blocklyDiv, { toolbox: toolbox });
 const languageToggle = document.getElementById("languageToggle")!;
 const codeArea = document.getElementById("codeArea")!;
 activateJsonLoader(workspace);
-defineJavaCodeGenScripting(test, javaGenerator);
-defineScriptCodeGenScripting(test, scriptGenerator);
+defineJavaCodeGenScripting(test as Scripting, javaGenerator);
+defineScriptCodeGenScripting(test as Scripting, scriptGenerator);
 // Add text node to code output element
 codeArea.append("");
 

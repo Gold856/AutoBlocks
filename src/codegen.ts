@@ -28,6 +28,7 @@ javaGenerator.scrub_ = function processJavaCommandCode(
 	return code + ")";
 };
 scriptGenerator.INDENT = "	";
+// @ts-ignore
 scriptGenerator.scrub_ = function processScriptCommandCode(
 	this: Generator,
 	block: Block,
