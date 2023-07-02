@@ -48,10 +48,6 @@ h1 {
 	line-height: 1.1;
 }
 
-span {
-	vertical-align: middle;
-}
-
 #blocklyArea {
 	display: flex;
 	height: 95.4vh;
@@ -59,29 +55,43 @@ span {
 }
 
 #toolbar {
-	height: 4.5vh;
+	--height: 4.5vh;
+	height: var(--height);
 	& input {
-		height: inherit;
+		width: 0;
+		height: 0;
 	}
-	& input::file-selector-button {
+	& label,
+	button {
+		vertical-align: top;
+		height: inherit;
+		min-width: fit-content;
+	}
+	& label {
+		box-sizing: border-box;
+		display: inline-block;
+		width: 10vw;
+		text-align: center;
+		line-height: var(--height);
 		border-radius: 8px;
 		border: 1px solid transparent;
-		padding: 0.6em 1.2em;
+		font-weight: 500;
+		color: #1a1a1a;
+		background-color: #b1b1b1;
 		cursor: pointer;
 		transition: border-color 0.25s;
-		height: inherit;
 	}
-	& button {
-		vertical-align: top;
-		align-items: stretch;
-		height: inherit;
+	& label:hover {
+		border-color: #646cff;
+	}
+	& label:focus-within {
+		outline: 4px auto -webkit-focus-ring-color;
 	}
 	#saveWorkspace {
 		width: 6vw;
 	}
 	#languageToggle {
 		width: 9vw;
-		min-width: fit-content;
 	}
 }
 
