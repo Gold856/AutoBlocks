@@ -10,6 +10,7 @@ import {
 	defineScriptCodeGenScripting,
 	scriptGenerator
 } from "./codegen";
+import { connectionCheckerInfo } from "./connection-checker";
 import { initHardcodedBlocks } from "./hardcoded-blocks";
 import { activateJsonLoader } from "./json-loader";
 import "./style.css";
@@ -20,7 +21,10 @@ loadBlocksScripting(test as Scripting);
 let generator = javaGenerator;
 const toolbox = createToolbox(generateCommandListScripting(test as Scripting));
 const blocklyDiv = document.getElementById("blocklyDiv")!;
-const workspace = Blockly.inject(blocklyDiv, { toolbox: toolbox });
+const workspace = Blockly.inject(blocklyDiv, {
+	toolbox: toolbox,
+	plugins: { ...connectionCheckerInfo }
+});
 const languageToggle = document.getElementById("languageToggle")!;
 const codeArea = document.getElementById("codeArea")!;
 activateJsonLoader(workspace);
