@@ -157,7 +157,8 @@ export function createToolbox(
 		name: "Methods",
 		contents: [
 			{ kind: "block", type: "Method" },
-			{ kind: "block", type: "Variable" }
+			{ kind: "block", type: "Variable" },
+			{ kind: "block", type: "RawText" }
 		]
 	};
 	// If there's methods available, add them to the category

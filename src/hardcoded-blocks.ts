@@ -1,5 +1,5 @@
 import { javaGenerator, scriptGenerator } from "./codegen";
-import { Block, Blocks, FieldTextInput } from "blockly";
+import { Block, Blocks, FieldMultilineInput, FieldTextInput } from "blockly";
 /**
  * Initializes blocks that are always in the workspace, such as command groups
  * <p>
@@ -47,6 +47,18 @@ export function initHardcodedBlocks() {
 				.appendField(new FieldTextInput("variable"), "VariableDeclaration");
 			this.setInputsInline(false);
 			this.setOutput(true, null);
+			this.setColour(230);
+			this.setTooltip("");
+			this.setHelpUrl("");
+		}
+	};
+	Blocks["RawText"] = {
+		init: function (this: Block) {
+			this.appendDummyInput()
+				.appendField("Raw Text")
+				.appendField(new FieldMultilineInput(""), "RawText");
+			this.setPreviousStatement(true, null);
+			this.setNextStatement(true, null);
 			this.setColour(230);
 			this.setTooltip("");
 			this.setHelpUrl("");
@@ -101,6 +113,11 @@ export function initHardcodedBlocks() {
 		} else {
 			return [variableDeclaration, 0];
 		}
+	};
+	// @ts-ignore
+	javaGenerator["RawText"] = (block: Block) => {
+		const text = block.getFieldValue("RawText");
+		return text + "\n";
 	};
 	// Initialize script codegen for blocks
 	// @ts-ignore

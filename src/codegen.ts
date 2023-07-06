@@ -18,10 +18,15 @@ javaGenerator.scrub_ = function processJavaCommandCode(
 	// @ts-ignore
 	const nextBlock = block.nextConnection?.targetBlock();
 	if (nextBlock && !thisOnly) {
+		// If there's a block connected to the bottom of a raw text block, output that block's code
+		if (block.type == "RawText") {
+			return code + this.blockToCode(nextBlock);
+		}
 		// @ts-ignore
 		return code + "),\n" + this.blockToCode(nextBlock);
 		// Methods don't allow connections and are not to be modified
-	} else if (block.nextConnection == null) {
+		// Raw text blocks should have nothing appended if they are at the end of a stack
+	} else if (block.nextConnection == null || block.type == "RawText") {
 		return code;
 	}
 	// Otherwise, close the command
