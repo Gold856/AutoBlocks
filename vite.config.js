@@ -1,7 +1,8 @@
+import { fileURLToPath } from 'node:url';
 export default {
 	build: {
 		rollupOptions: {
-			external: ["src/sw.js"]
+			external: [fileURLToPath(new URL('src/style.css', import.meta.url))]
 		}
 	}
 };

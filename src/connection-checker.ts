@@ -12,6 +12,7 @@ export class OneCommandConnectionChecker extends ConnectionChecker {
 	 * @param b This connection belongs to the block you are trying to connect to
 	 * @returns
 	 */
+	// @ts-ignore
 	doTypeChecks(a: Connection, b: Connection): boolean {
 		// Logically, if you try to stack two blocks together, when you drag the 2nd block, b will be the 'next'
 		// connection of the first block. This also applies in a method block.

@@ -5,9 +5,9 @@ import {
 	loadBlocksScripting
 } from "./block-loader";
 import {
-	javaGenerator,
 	defineJavaCodeGenScripting,
 	defineScriptCodeGenScripting,
+	javaGenerator,
 	scriptGenerator
 } from "./codegen";
 import { connectionCheckerInfo } from "./connection-checker";

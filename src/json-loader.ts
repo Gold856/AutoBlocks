@@ -1,10 +1,10 @@
 import { serialization, WorkspaceSvg } from "blockly";
 import {
 	createToolbox,
-	generateCommandListScripting,
 	generateCommandListAutoBlocks,
-	loadBlocksScripting,
-	loadBlocksAutoBlocks
+	generateCommandListScripting,
+	loadBlocksAutoBlocks,
+	loadBlocksScripting
 } from "./block-loader";
 import {
 	defineJavaCodeGenAutoBlocks,

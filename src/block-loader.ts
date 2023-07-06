@@ -56,7 +56,7 @@ export function generateCommandListScripting(commandData: Scripting) {
  * Ensures a field's value is either a number or a variable
  * @param currentValue The value of the field
  */
-function fieldValidator(currentValue: string) {
+function fieldValidator(this: Input, currentValue: string) {
 	let variables = [];
 	// Contains the containing method block
 	let methodBlock = this.getSourceBlock().getRootBlock();
@@ -103,7 +103,10 @@ function generateParameter(block: Input, parameter: Parameter) {
 			block.appendField(new FieldDropdown(options), parameter.name);
 			break;
 		case "number":
-			block.appendField(new FieldTextInput(0, fieldValidator), parameter.name);
+			block.appendField(
+				new FieldTextInput("0", fieldValidator),
+				parameter.name
+			);
 			break;
 		case "javaObject":
 		case "raw":
