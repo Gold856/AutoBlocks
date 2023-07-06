@@ -40,6 +40,9 @@ workspace.addChangeListener((event: any) => {
 		event instanceof Blockly.Events.BlockBase ||
 		event instanceof Blockly.Events.FinishedLoading
 	) {
+		for (const methodBlock of workspace.getBlocksByType("Method", true)) {
+			methodBlock.getInputTargetBlock("commands")?.nextConnection?.disconnect();
+		}
 		// Select text node and place code there
 		codeArea.childNodes[1].textContent = generator.workspaceToCode(workspace);
 	}
