@@ -8,6 +8,9 @@
       "DOM",
       "DOM.Iterable"
     ],
+    "types": [
+      "cypress"
+    ],
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
     /* Bundler mode */

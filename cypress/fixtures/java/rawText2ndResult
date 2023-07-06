@@ -1,0 +1,6 @@
+public static Command MethodName() {
+	return	new SequentialCommandGroup(
+		new DriveDistanceCommand(1),
+		// Testing
+		new WaitCommand(2));
+}
