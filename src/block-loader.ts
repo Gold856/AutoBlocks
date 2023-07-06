@@ -115,7 +115,7 @@ function generateParameter(block: Input, parameter: Parameter) {
 	}
 }
 /**
- * Defines a block with the Java command name as the block name and using the command definition to define parameters
+ * Defines a block with the Java command name as the block name and uses the command definition to define parameters
  * @param commandName The command name in Java
  * @param command The command definition
  */

@@ -62,6 +62,7 @@ export function defineScriptCodeGenScripting(
 	commandData: Scripting,
 	generator: Generator
 ) {
+	// For each command/block, generate the script code associated with it
 	for (const [javaCommandName, command] of Object.entries(commandData)) {
 		defineScriptCodegen(javaCommandName, command, generator);
 	}
@@ -77,6 +78,7 @@ export function defineScriptCodeGenAutoBlocks(
 	commandData: AutoBlocks,
 	generator: Generator
 ) {
+	// For each command/block, generate the script code associated with it
 	for (const command of commandData.commands) {
 		defineScriptCodegen(command.name, command, generator);
 	}
@@ -92,8 +94,8 @@ export function defineJavaCodeGenAutoBlocks(
 	commandData: AutoBlocks,
 	generator: Generator
 ) {
+	// For each command/block, generate the Java code associated with it
 	for (const command of commandData.commands) {
-		// For each command, generate the Java code associated with it
 		defineJavaCodegen(command.name, command.parameters, generator);
 	}
 }
@@ -108,6 +110,7 @@ export function defineJavaCodeGenScripting(
 	commandData: Scripting,
 	generator: Generator
 ) {
+	// For each command/block, generate the Java code associated with it
 	for (const [javaCommandName, command] of Object.entries(commandData)) {
 		defineJavaCodegen(javaCommandName, command.parameters, generator);
 	}
@@ -129,11 +132,11 @@ function defineScriptCodegen(
 		for (const parameter of command.parameters) {
 			// Value from user
 			let argument = block.getFieldValue(parameter.name);
-			// If the parameter is an enum, the prefix is the class the enum belongs to, so append it before the selected option
+			// For enums, the prefix is the enum class name, so prepend the prefix before the selected option
 			if (parameter.type == "select") {
 				let enumValue: string = parameter.prefix + `.${argument}`;
 				code += " " + enumValue;
-				// Otherwise, just append the argument
+				// Otherwise, just append the argument to the code
 			} else {
 				code += " " + argument;
 			}
@@ -159,15 +162,15 @@ function defineJavaCodegen(
 			const parameter = params[index];
 			// Value from user
 			let argument = block.getFieldValue(parameter.name);
-			// If the parameter is an enum, the prefix is the class the enum belongs to, so append it before the selected option
-			if (parameter.type == "select") {
+			// For enums, the prefix is the enum class name, so prepend the prefix before the selected option
+			if (parameter.type == "enum") {
 				let enumValue: string = parameter.prefix + `.${argument}`;
 				code += enumValue;
-				// Otherwise, just append the argument
+				// Otherwise, just append the argument to the code
 			} else {
 				code += argument;
 			}
-			// Check if we need to add commas, either it's one arg, or we have no more params
+			// Check if commas are needed, if it's one arg or we have no more params, no commas are needed
 			if (params.length == 1 || params.length - 1 == index) {
 			} else {
 				code += ",";
