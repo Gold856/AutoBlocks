@@ -57,8 +57,7 @@ export function defineScriptCodeGenScripting(
 	commandData: Scripting,
 	generator: Generator
 ) {
-	let commands = commandData.commands;
-	for (const [javaCommandName, command] of Object.entries(commands)) {
+	for (const [javaCommandName, command] of Object.entries(commandData)) {
 		defineScriptCodegen(javaCommandName, command, generator);
 	}
 }
@@ -107,8 +106,7 @@ export function defineJavaCodeGenScripting(
 	commandData: Scripting,
 	generator: Generator
 ) {
-	let commands = commandData.commands;
-	for (const [javaCommandName, command] of Object.entries(commands)) {
+	for (const [javaCommandName, command] of Object.entries(commandData)) {
 		const params = command.parameters;
 		defineJavaCodegen(javaCommandName, params, generator);
 	}

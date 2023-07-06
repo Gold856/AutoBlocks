@@ -22,9 +22,7 @@ export function loadBlocksAutoBlocks(commandData: AutoBlocks) {
  * @param commandData Command data from scripting JSON
  */
 export function loadBlocksScripting(commandData: Scripting) {
-	for (const [javaCommandName, command] of Object.entries(
-		commandData.commands
-	)) {
+	for (const [javaCommandName, command] of Object.entries(commandData)) {
 		defineBlock(javaCommandName, command);
 	}
 }
@@ -53,7 +51,7 @@ export function generateCommandListAutoBlocks(
  */
 export function generateCommandListScripting(commandData: Scripting) {
 	let commandList = [];
-	for (const commandName of Object.keys(commandData.commands)) {
+	for (const commandName of Object.keys(commandData)) {
 		commandList.push(commandName);
 	}
 	return commandList;
