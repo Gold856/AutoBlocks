@@ -111,9 +111,8 @@ label {
 
 #copyButton {
 	float: right;
-	height: 4vh;
-	width: 4vw;
 	min-width: fit-content;
+	min-height: fit-content;
 	user-select: none;
 }
 

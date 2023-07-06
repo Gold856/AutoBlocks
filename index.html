@@ -15,19 +15,21 @@
 
 	<body>
 		<div id="toolbar">
-			<label>
+			<label id="loadCommandLabel">
 				&nbsp;Load Commands
 				<input id="fileInput" type="file" accept="application/json" />
 			</label>
 			<button id="saveWorkspace">Save Workspace</button>
-			<label>
+			<label id="loadWorkspaceLabel">
 				&nbsp;Load Workspace
 				<input id="loadWorkspace" type="file" accept="application/json" />
 			</label>
 			<button id="languageToggle">Use Scripting</button>
 		</div>
 		<div id="blocklyArea">
-			<pre id="codeArea"><button id="copyButton">Copy</button></pre>
+			<pre
+				id="codeArea"
+			><button id="copyButton"><img src="assets/result.svg" alt="Copy" height=20 width=20/></button></pre>
 			<div id="blocklyDiv"></div>
 		</div>
 		<script type="module" src="/src/main.ts"></script>
