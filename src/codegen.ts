@@ -137,7 +137,7 @@ function defineScriptCodegen(
 			// Value from user
 			let argument = block.getFieldValue(parameter.name);
 			// For enums, the prefix is the enum class name, so prepend the prefix before the selected option
-			if (parameter.type == "select") {
+			if (parameter.type == "enum" || parameter.type == "select") {
 				let enumValue: string = parameter.prefix + `.${argument}`;
 				code += " " + enumValue;
 				// Otherwise, just append the argument to the code
@@ -167,7 +167,7 @@ function defineJavaCodegen(
 			// Value from user
 			let argument = block.getFieldValue(parameter.name);
 			// For enums, the prefix is the enum class name, so prepend the prefix before the selected option
-			if (parameter.type == "enum") {
+			if (parameter.type == "enum" || parameter.type == "select") {
 				let enumValue: string = parameter.prefix + `.${argument}`;
 				code += enumValue;
 				// Otherwise, just append the argument to the code
