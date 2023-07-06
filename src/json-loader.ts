@@ -67,7 +67,6 @@ export function activateJsonLoader(workspace: WorkspaceSvg) {
 			{ type: "application/json" }
 		);
 		let link = document.createElement("a");
-		link.id = "destroy";
 		link.download = "workspace.json";
 		link.href = URL.createObjectURL(file);
 		link.click();

@@ -40,6 +40,7 @@ workspace.addChangeListener((event: any) => {
 		event instanceof Blockly.Events.BlockBase ||
 		event instanceof Blockly.Events.FinishedLoading
 	) {
+		// Disconnect any blocks attached to the first block in the statement input of a method
 		for (const methodBlock of workspace.getBlocksByType("Method", true)) {
 			methodBlock.getInputTargetBlock("commands")?.nextConnection?.disconnect();
 		}

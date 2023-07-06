@@ -15,14 +15,18 @@ javaGenerator.scrub_ = function processJavaCommandCode(
 ): string {
 	// If there's a connected block, and all attached blocks should have code generated,
 	// then close off the previous command and add a comma to include the next command
-	// @ts-ignore
 	const nextBlock = block.nextConnection?.targetBlock();
 	if (nextBlock && !thisOnly) {
 		// If there's a block connected to the bottom of a raw text block, output that block's code
 		if (block.type == "RawText") {
 			return code + this.blockToCode(nextBlock);
+			// If the raw text block is the next AND last block in a stack, just close the current command
+		} else if (
+			nextBlock.type == "RawText" &&
+			nextBlock.nextConnection?.targetBlock() == null
+		) {
+			return code + ")\n" + this.blockToCode(nextBlock);
 		}
-		// @ts-ignore
 		return code + "),\n" + this.blockToCode(nextBlock);
 		// Methods don't allow connections and are not to be modified
 		// Raw text blocks should have nothing appended if they are at the end of a stack
