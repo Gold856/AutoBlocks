@@ -72,8 +72,7 @@ export function defineScriptCodeGenAutoBlocks(
 	commandData: AutoBlocks,
 	generator: Generator
 ) {
-	let commands = commandData.commands;
-	for (const command of commands) {
+	for (const command of commandData.commands) {
 		defineScriptCodegen(command.name, command, generator);
 	}
 }
@@ -88,11 +87,9 @@ export function defineJavaCodeGenAutoBlocks(
 	commandData: AutoBlocks,
 	generator: Generator
 ) {
-	let commands = commandData.commands;
-	for (const command of commands) {
-		const params = command.parameters;
+	for (const command of commandData.commands) {
 		// For each command, generate the Java code associated with it
-		defineJavaCodegen(command.name, params, generator);
+		defineJavaCodegen(command.name, command.parameters, generator);
 	}
 }
 /**
@@ -107,8 +104,7 @@ export function defineJavaCodeGenScripting(
 	generator: Generator
 ) {
 	for (const [javaCommandName, command] of Object.entries(commandData)) {
-		const params = command.parameters;
-		defineJavaCodegen(javaCommandName, params, generator);
+		defineJavaCodegen(javaCommandName, command.parameters, generator);
 	}
 }
 /**
@@ -122,11 +118,10 @@ function defineScriptCodegen(
 	command: Command,
 	generator: Generator
 ) {
-	const params = command.parameters;
 	// @ts-ignore
 	generator[javaCommandName] = (block: Block) => {
 		let code = command.name;
-		for (const parameter of params) {
+		for (const parameter of command.parameters) {
 			// Value from user
 			let argument = block.getFieldValue(parameter.name);
 			// If the parameter is an enum, the prefix is the class the enum belongs to, so append it before the selected option

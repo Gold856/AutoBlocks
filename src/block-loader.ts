@@ -50,11 +50,7 @@ export function generateCommandListAutoBlocks(
  * @returns The list of commands in the JSON file
  */
 export function generateCommandListScripting(commandData: Scripting) {
-	let commandList = [];
-	for (const commandName of Object.keys(commandData)) {
-		commandList.push(commandName);
-	}
-	return commandList;
+	return Object.keys(commandData);
 }
 /**
  * Ensures a field's value is either a number or a variable
@@ -106,10 +102,10 @@ function generateParameter(block: Input, parameter: Parameter) {
 			}
 			block.appendField(new FieldDropdown(options), parameter.name);
 			break;
-		case "javaObject":
 		case "number":
 			block.appendField(new FieldTextInput(0, fieldValidator), parameter.name);
 			break;
+		case "javaObject":
 		case "raw":
 			block.appendField(new FieldTextInput(), parameter.name);
 			break;
