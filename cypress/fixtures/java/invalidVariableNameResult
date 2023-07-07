@@ -1,0 +1,3 @@
+public static Command MethodName(double distance) {
+	return	new WaitCommand(0);
+}

@@ -67,4 +67,12 @@ describe("Java Code Test", () => {
 			cy.get("#codeArea").should("have.text", contents)
 		);
 	});
+	it("Reject Invalid Variable Name Test", () => {
+		cy.get("#loadWorkspaceLabel").selectFile(
+			"cypress/fixtures/invalidVariableName.json"
+		);
+		cy.fixture("java/invalidVariableNameResult").then((contents: string) =>
+			cy.get("#codeArea").should("have.text", contents)
+		);
+	});
 });
